@@ -1,7 +1,7 @@
 // Candidates.tsx
 import { useSelector } from 'react-redux';
 import { useNavigate , Routes, Route } from 'react-router-dom';
-import Table from './Table';
+import { Table } from '../Components';
 import CandidateProfile from './CandidateProfile';
 
 interface RootState {

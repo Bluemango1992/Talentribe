@@ -1,31 +1,23 @@
 // firebase.ts
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
-// Load environment variables
-import dotenv from 'dotenv';
-dotenv.config();
-
-// Get environment variables
-const apiKey = process.env.FIREBASE_API_KEY;
-const authDomain = process.env.FIREBASE_AUTH_DOMAIN;
-const projectId = process.env.FIREBASE_PROJECT_ID;
-const storageBucket = process.env.FIREBASE_STORAGE_BUCKET;
-const messagingSenderId = process.env.FIREBASE_MESSAGING_SENDER_ID;
-const appId = process.env.FIREBASE_APP_ID;
-const measurementId = process.env.FIREBASE_MEASUREMENT_ID;
-
-// Firebase config
 const firebaseConfig = {
-  apiKey,
-  authDomain,
-  projectId,
-  storageBucket,
-  messagingSenderId,  
-  appId,
-  measurementId
+  apiKey: "AIzaSyASnII290uTAhc-76Qq1T_uWibHH91uKH0",
+  authDomain: "talentribe-5ee32.firebaseapp.com",
+  projectId: "talentribe-5ee32",
+  storageBucket: "talentribe-5ee32.appspot.com",
+  messagingSenderId: "656675442579",
+  appId: "1:656675442579:web:1591e87e0578e09a99e266",
+  measurementId: "G-Q43TP6FPL9"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export { app };
+
+export const auth = getAuth(app);
+
+
+
+

@@ -1,7 +1,7 @@
 // CandidateProfile.tsx
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Paper } from './Components';
+import { Paper } from '../Components';
 
 interface Candidate {
     id: string;
