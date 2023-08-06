@@ -1,6 +1,6 @@
 
 interface ButtonProps {
-    text: string;
+    children?: React.ReactNode;
     onClick: () => void;
     theme?: 'light' | 'dark';
     size?: 'small' | 'medium' | 'large';
@@ -25,14 +25,14 @@ const variantStyles = {
     tertiary: 'bg-transparent hover:bg-gray-100',
 };
 
-const Button = ({ text, onClick, theme = 'light', size = 'medium', disabled = false, variant = 'primary' }: ButtonProps) => {
+const Button = ({ children, onClick, theme = 'light', size = 'medium', disabled = false, variant = 'primary' }: ButtonProps) => {
     return (
         <button
             className={`rounded-md ${baseStyles[theme]} ${sizeStyles[size]} ${variantStyles[variant]}`}
             onClick={onClick}
             disabled={disabled}
         >
-            {text}
+            {children}
         </button>
     )
 }

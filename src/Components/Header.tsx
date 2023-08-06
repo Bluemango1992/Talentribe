@@ -1,3 +1,7 @@
+import { Link } from 'react-router-dom';
+import { UserButton } from '@clerk/clerk-react';
+
+
 const Header = () => {
     return (
       <div className=' bg-slate-200 flex-0 flex items-center justify-between h-12 px-5'>
@@ -5,6 +9,8 @@ const Header = () => {
         <Search placeholder='Search...' />
         <div className='flex items-center justify-between gap-2'>
           <Avatar size='small' />
+          <Link to="/">Home</Link>
+      <UserButton />
       </div>
       </div>
     )

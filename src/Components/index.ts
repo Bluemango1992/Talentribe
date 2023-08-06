@@ -2,3 +2,4 @@ export { default as Paper } from './Paper';
 export { default as Button } from './Button';
 export { default as Header } from './Header';
 export { default as SideBar } from './SideBar';
+export { default as Layout } from './Layout';

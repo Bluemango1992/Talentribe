@@ -1,41 +1,73 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
 import { useState } from 'react';
 import { FaBriefcase } from 'react-icons/fa';
 import { H1, H2, H3, H4, H6, P, P2, Caption } from './Typography';
 import { Provider } from 'react-redux';
 import store from './store';
 import Candidates from './Candidates';
-import CandidateProfile from './CandidateProfile';
-import { Paper , Button , SideBar , Header } from './Components';
+import { Paper , Button , Layout } from './Components';
+import React from 'react';
+
 
 const App = () => {
   return (
     <Provider store={store}>
-    <Router>
-      <div className='bg-slate-100 h-screen flex flex-col'>
-        <Header />
-        <div className='flex-1 flex flex-row justify-center'>
-          <SideBar />
-          <div className='flex-1 flex flex-col'>
-            <Routes>
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/clients" element={<Clients />} />
-              <Route path="/candidates" element={<Candidates />} />
-              <Route path="/candidate/:id" element={<CandidateProfile />} />
-              <Route path="/organisations" element={<Organisations />} />
-            </Routes>
-          </div>
-        </div>
-      </div>
-    </Router>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/clients' element={<Clients />} />
+            <Route path='/jobs' element={<Jobs />} />
+            <Route path='/candidates' element={<Candidates />} />
+            <Route path='/organisations' element={<Organisations />} />
+            <Route path='*' element={<NotFound />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+          </Routes>
+        </Layout>
+      </Router>
     </Provider>
-  )
+  );
 }
 
 export default App
 
+const Home = () => {
+  const [count, setCount] = useState(0);
 
+  return (
+    <div className='flex flex-col items-center'>
+      <H1>Home</H1>
+      <P2>Count: {count}</P2>
+      <Button onClick={() => setCount(count + 1)}>Increment</Button>
+    </div>
+  );
+}
+
+const Login = () => {
+  return (
+    <div className='flex flex-col items-center'>
+      <H1>Login</H1>
+    </div>
+  );
+}
+
+const Register = () => {
+  return (
+    <div className='flex flex-col items-center'>
+      <H1>Register</H1>
+    </div>
+  );
+}
+
+const NotFound = () => {
+  return (
+    <div className='flex flex-col items-center'>
+      <H1>404</H1>
+      <P2>Page not found</P2>
+    </div>
+  );
+}
 
 const data = [
   {
@@ -230,7 +262,7 @@ const Clients = () => {
   return (
     <>
       <ClientsCard />
-      <div className='flex flex-row gap-4 m-8'>
+      <div className='flex flex-col-3'>
         {activities.map(activity => (
           <ActivityCard 
             key={activity.id}
@@ -243,29 +275,6 @@ const Clients = () => {
   )
 
 }
-
-
-
-const Organisations = () => {
-  return (
-    <>
-      <Button theme='dark' variant='primary' text = 'Add Organisation' onClick={() => {}} />
-      <OrganisationCard />
-    </>
-  )
-}
-
-const OrganisationCard = () => {
-  return (
-    <Paper>
-      <H3>Organisation Name</H3>
-      <P>Company Name</P>
-      <P>Company Address</P>
-      <BreadCrumb items={['New York', 'Permanent', 'GBP £60k pa base', 'PAYG']} />
-    </Paper>
-  )
-}
-
 
 function ClientsCard() {
   return (
@@ -311,6 +320,34 @@ const ActivityCard = ({title, description}: ActivityCardProps) => {
 interface PillProps {
     children?: React.ReactNode;
 }
+
+
+
+const Organisations = () => {
+  return (
+    <>
+      <Button theme='dark' variant='primary' onClick={() => {}}>
+        Add Organisation
+      </Button>
+
+      <OrganisationCard />
+    </>
+  )
+}
+
+const OrganisationCard = () => {
+  return (
+    <Paper>
+      <H3>Organisation Name</H3>
+      <P>Company Name</P>
+      <P>Company Address</P>
+      <BreadCrumb items={['New York', 'Permanent', 'GBP £60k pa base', 'PAYG']} />
+    </Paper>
+  )
+}
+
+
+
 
 const Pill = ({ children }: PillProps) => {
   
