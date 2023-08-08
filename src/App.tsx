@@ -1,18 +1,20 @@
+
 import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
-import { FaBriefcase } from 'react-icons/fa';
+import { FaBriefcase , FaPhone , FaArrowDown , FaAngry } from 'react-icons/fa';
 import { H1, H2, H3, H4, H6, P, P2, Caption } from './Typography';
 import { Provider } from 'react-redux';
 import store from './Pages/store';
-import { Paper , Button , TabBar , Breadcrumbs } from './Components';
-import { Candidates , CandidateProfile } from './Pages';
-import { SignIn } from './Components/auth';
+import { Paper , TabBar , Breadcrumbs , FAB } from './Components';
+import { Candidates , CandidateProfile , Layout } from './Pages';
+import { SignIn , SignUp } from './Components/auth';
 
 const App = () => {
   return (
     <Provider store={store}>
       <Router>
           <Routes>
-            <Route path='/' element={<SignIn />} />
+            <Route path='/signin' element={<SignIn />} />
+            <Route path='/signup' element={<SignUp />} />
             <Route path='/clients' element={<Clients />} />
             <Route path='/jobs' element={<Jobs />} />
             <Route path='/candidates' element={<Candidates />} />
@@ -36,6 +38,7 @@ const NotFound = () => {
     </div>
   );
 }
+
 
 const data = [
   {
@@ -106,7 +109,7 @@ const Jobs = () => {
   const closedJobs = data.filter(job => job.status === 'Closed').length;
 
   return (
-    <>
+    <Layout>
     <div className='grid grid-cols-3 gap-4 bg-slate-50 p-8 rounded-sm'>
       <KPI title='Open' count={openJobs} />
       <KPI title='Active' count={activeJobs} />
@@ -117,7 +120,7 @@ const Jobs = () => {
         <JobCard key={item.id} {...item} />
       ))}
     </div>
-    </>
+    </Layout>
   );
 };
 
@@ -241,7 +244,7 @@ const Clients = () => {
   ];
 
   return (
-    <>
+    <Layout>
       <ClientsCard />
       <div className='grid grid-cols-3 gap-4 m-8'>
         {clientdata.map(clientjobs => (
@@ -257,7 +260,7 @@ const Clients = () => {
           />
         ))}
       </div>
-    </>
+    </Layout>
   )
 }
 
@@ -275,9 +278,9 @@ const ClientsCard = () => {
         <Breadcrumbs items={['New York', 'Permanent', 'GBP £60k pa base', 'PAYG']} theme='dark' />
         </div>
         <div className='flex flex-row gap-3'>
-        <FAB />
-        <FAB />
-        <FAB />
+        <FAB icon={<FaAngry />} />
+        <FAB icon={<FaPhone />} />
+        <FAB icon={<FaArrowDown />} />
         </div>
         </div>
       <TabBar tabs={['Summary', 'Activity', 'Personal', 'Career', 'Documents', 'Internal']} theme='dark' />
@@ -345,13 +348,9 @@ const Pill: React.FC<PillProps> = ({variant}) => {
 
 const Organisations = () => {
   return (
-    <>
-      <Button theme='dark' variant='primary' onClick={() => {}}>
-        Add Organisation
-      </Button>
-
+    <Layout>
       <OrganisationCard />
-    </>
+    </Layout>
   )
 }
 
@@ -366,12 +365,6 @@ const OrganisationCard = () => {
   )
 }
 
-const FAB = () => {
-  return (
-    <div className='bg-white w-12 h-12 rounded-full'>  
-    </div>
-  )
-}
 
 
 

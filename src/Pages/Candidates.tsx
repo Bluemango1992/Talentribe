@@ -2,6 +2,7 @@
 import { useSelector } from 'react-redux';
 import { useNavigate , Routes, Route } from 'react-router-dom';
 import { Table } from '../Components';
+import { Layout } from '../Pages';
 import CandidateProfile from './CandidateProfile';
 
 interface RootState {
@@ -27,6 +28,7 @@ const Candidates = () => {
   };  
 
   return (
+    <Layout>
     <Routes>
       <Route path="/candidate/:id" element={<CandidateProfile />} />
       <Route path="/" element={
@@ -38,6 +40,7 @@ const Candidates = () => {
         />} 
       />
     </Routes>
+    </Layout>
   );
 };
 

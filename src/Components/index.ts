@@ -1,8 +1,9 @@
 export { default as Paper } from './Paper';
 export { default as Button } from './Button';
-export { default as Header } from './Header';
 export { default as SideBar } from './SideBar';
-export { default as Layout } from './Layout';
 export { default as TabBar } from './TabBar';
 export { default as Breadcrumbs } from './Breadcrumbs';
 export { default as Table } from './Table';
+export { default as Input } from './Input';
+export { default as Avatar } from './Avatar';
+export { FAB } from './FAB';
