@@ -35,7 +35,7 @@ interface TabBarProps {
       <div 
         onClick={onSelect}
         className={`cursor-pointer p-1
-         ${isSelected ? 'text-slate-400' : 'text-slate-200'}`}
+         ${isSelected ? 'text-slate-400' : 'text-slate-900'}`}
       >
         {title}
       </div>

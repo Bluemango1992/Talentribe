@@ -1,4 +1,5 @@
 import { SideBar , Avatar } from '../Components';
+import logo from '../assets/Talentribe.png';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -6,15 +7,15 @@ interface LayoutProps {
   
   const Layout = ({ children }: LayoutProps) => {
     return (
-        <>
+        <div className='flex flex-col h-screen'>
             <Header />
-                <div className='flex min-h-screen'>
+                <div className='flex flex-row flex-1'>
                     <SideBar />
                     <div className='flex-1'>
                     {children}
                 </div>
                 </div>
-        </>
+        </div>
     )
     }
 
@@ -22,19 +23,19 @@ interface LayoutProps {
 
   const Header = () => {
     return (
-        <div className='bg-slate-200 flex-1 flex h-12 items-center justify-between px-3'>
-            <div className='bg-slate-900 h-10 w-12' />
+        <div className='bg-slate-800 flex h-12 px-8 items-center justify-between'>
+            <img src={logo} alt="Talentribe" className='h-8' />
             <SearchBar />
-            <Avatar size='small' />
+            <Avatar />
         </div>
     )
 }
 
 const SearchBar = () => {
     return (
-        <div className='flex-1 flex items-center'>
-            <input type="text" placeholder="Search" className="bg-white border border-transparent focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent rounded-md px-2 py-1" />
-        </div>
+        <>
+            <input type="text" placeholder="Search" className="bg-white border border-transparent focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent rounded-md px-2 py-1 w-1/3" />
+        </>
     )
 }
 

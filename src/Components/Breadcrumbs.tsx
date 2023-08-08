@@ -1,4 +1,5 @@
 import React from 'react';
+import { Caption } from '../Typography';
 
 interface BreadcrumbsProps {
     items?: string[];
@@ -13,7 +14,7 @@ const Breadcrumbs = ({
     const textColor = theme === 'dark' ? 'text-white' : 'text-black';
   
     return (
-      <div className={`flex gap-2 ${textColor}`}>
+      <div className={`flex gap-2 items-center ${textColor}`}>
         {items.map((item, index) => (
           <React.Fragment key={index}>
             <BreadcrumbsItem title={item} />
@@ -32,9 +33,8 @@ const Breadcrumbs = ({
   
   function BreadcrumbsItem({ title }: BreadcrumbsItemProps) {
     return (
-      <div className='text-bg-200'>
+      <Caption>
         {title}
-      </div>
+      </Caption>
     )
   }
-
