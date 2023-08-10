@@ -1,5 +1,5 @@
 import { FaAngry, FaArrowDown, FaPhone } from 'react-icons/fa';
-import { H1, H2, H3, H4, P } from '../Typography';
+import { H1, H2, H4, P } from '../Typography';
 import { Breadcrumbs, TabBar, Paper , FAB } from '../Components';
 import Layout from './Layout';
 import { useEffect, useState } from 'react';
@@ -7,30 +7,18 @@ import { useEffect, useState } from 'react';
 
 const Clients = () => {
 
-  const [clientdata, setClientData] = useState<ActivityCardProps[]>([]);
-  useEffect(() => {
-    fetch('http://localhost:3001/Clients')
-      .then(response => response.json())
-      .then(data => setClientData(data))
-      .catch(error => console.log(error));
-  }, []);
+  const [selectedTab, setSelectedTab] = useState<string>('Summary');
   
     return (
       <Layout>
         <ClientsCard />
-        <div className='grid grid-cols-3 gap-4 m-8'>
-          {clientdata.map(clientjobs => (
-            <ActivityCard 
-            title={clientjobs.title}
-            status={clientjobs.status}
-            description={clientjobs.description}
-            location={clientjobs.location}
-            salary={clientjobs.salary}
-            JobType={clientjobs.JobType}  
-            taxtype={clientjobs.taxtype}
-          />          
-          ))}
-        </div>
+        <TabBar tabs={['Summary', 'Activity', 'Personal', 'Career', 'Internal', 'Documents']} theme='light' onSelectTab={setSelectedTab} />
+        {selectedTab === 'Summary' && <Summary />}
+        {selectedTab === 'Activity' && <Activity />}
+        {selectedTab === 'Personal' && <Personal />}
+        {selectedTab === 'Career' && <Career />}
+        {selectedTab === 'Internal' && <Internal />}
+        {selectedTab === 'Documents & Notes' && <Documents />}
       </Layout>
     )
   }
@@ -41,7 +29,7 @@ const Clients = () => {
     return (
       <Paper>
         <div className='flex flex-row items-center gap-4 p-8'>
-          <div className='w-32 h-32 rounded-full border border-gray-200 flex items-center justify-center'>
+          <div className='w-32 h-32 rounded-full flex items-center justify-center border border-gray-200 shadow-lg'>
             <H1 theme='light'>JD</H1>
           </div>
           <div className='flex flex-1 flex-col gap-2'>
@@ -56,10 +44,86 @@ const Clients = () => {
           <FAB icon={<FaArrowDown />} />
           </div>
           </div>
-        <TabBar tabs={['Summary', 'Activity', 'Personal', 'Career', 'Documents', 'Internal']} theme='dark' />
       </Paper>
     )
   }
+
+    const Summary = () => {
+
+      const [clientData, setClientData] = useState<any[]>([]);
+
+      useEffect(() => {
+        fetch('http://localhost:3001/Clients')
+          .then(response => response.json())
+          .then(data => setClientData(data))
+          .catch(error => console.log(error));
+      }, []);
+
+      return (
+        <div className='grid grid-cols-3 gap-4 m-8'>
+          {clientData.map((clientjobs) => (
+            <ActivityCard 
+            title={clientjobs.title}
+            status={clientjobs.status}
+            description={clientjobs.description}
+            location={clientjobs.location}
+            salary={clientjobs.salary}
+            JobType={clientjobs.JobType}  
+            taxtype={clientjobs.taxtype}
+          />          
+          ))}
+        </div>
+      )
+    }
+
+    const Activity = () => {
+      return (
+        <Container>
+          Activity
+        </Container>
+      )
+    }
+
+    const Container = ({children}: any) => {
+      return (
+        <div className='flex p-4 m-8 bg-slate-100 border border-gray-200 flex-1 rounded-md'>
+          {children}
+        </div>
+      )
+    }
+
+
+    const Personal = () => {
+      return (
+        <Container>
+          Personal
+        </Container>
+      )
+    }
+
+    const Career = () => {
+      return (
+        <Container>
+          Career
+        </Container>
+      )
+    }
+
+    const Documents = () => {
+      return (
+        <Paper>
+          Documents
+        </Paper>
+      )
+    }
+
+    const Internal = () => {
+      return (
+        <Paper>
+          Internal
+        </Paper>
+      )
+    }
 
   interface ActivityCardProps {
     title: string;

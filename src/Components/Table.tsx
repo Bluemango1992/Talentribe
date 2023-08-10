@@ -28,13 +28,13 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
   interface TableRowProps {
     row: any;
     keys: string[];
-    onRowClick?: (row: any) => void;
+    onRowClick: (row: any) => void;
   }
-  
+
   const TableRow: React.FC<TableRowProps> = ({ row, keys, onRowClick }) => {
     const handleClick = () => {
-      if (onRowClick) {
-        onRowClick(row);
+      if (onRowClick && row.id) {
+        onRowClick(row.id); // Pass only the id to the onRowClick function
       }
     };
   
@@ -47,8 +47,9 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
         ))}
       </div>
     );
-  };
+};
   
+      
   const TableFooter = ({ page, setPage, maxPage }: { page: number, setPage: (page: number) => void, maxPage: number }) => {
     return (
       <div className='flex flex-row justify-center space-x-4 p-4'>
@@ -75,7 +76,7 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
     onRowClick: (row: any) => void;
   }
   
-  const Table: React.FC<TableProps> = ({ data, headers, keys, onRowClick }) => {
+  const Table: React.FC<TableProps> = ({ data , headers, keys, onRowClick }) => {
   
     const [page, setPage] = useState(0);
   

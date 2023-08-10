@@ -18,6 +18,37 @@ app.get('/clients', async (req, res) => {
     }
 });
 
+app.get('/jobs', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM jobs");
+        res.json(rows);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.get('/candidates', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM candidates");
+        res.json(rows);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.get('/organisations', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM organisations");
+        res.json(rows);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
