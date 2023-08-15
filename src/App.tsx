@@ -1,7 +1,6 @@
 
 import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
 import { H1, P2 } from './Typography';
-import { Provider } from 'react-redux';
 import { Candidates , CandidatesProfile , Clients, Jobs, Organisations } from './Pages';
 import { SignIn , SignUp } from './Components/auth';
 
@@ -15,7 +14,7 @@ const App = () => {
             <Route path='/clients' element={<Clients />} />
             <Route path='/jobs' element={<Jobs />} />
             <Route path='/candidates' element={<Candidates />} />
-            <Route path="/candidate/:id" element={<CandidatesProfile />} />
+            <Route path="/candidates/:id" element={<CandidatesProfile />} />
             <Route path='/organisations' element={<Organisations />} />
             <Route path='*' element={<NotFound />} />
           </Routes>

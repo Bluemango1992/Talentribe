@@ -32,11 +32,12 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
   }
 
   const TableRow: React.FC<TableRowProps> = ({ row, keys, onRowClick }) => {
+
     const handleClick = () => {
-      if (onRowClick && row.id) {
-        onRowClick(row.id); // Pass only the id to the onRowClick function
+      if (onRowClick && row.candidateID) {
+          onRowClick(row.candidateID); 
       }
-    };
+  };  
   
     return (
         <div className='flex flex-row border-b border-gray-200 hover:bg-gray-100' onClick={handleClick}>
@@ -88,7 +89,7 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
     );
   
     return (
-      <div className='flex flex-1 flex-col gap-2 bg-white rounded-md shadow-md m-8'>
+      <div className='flex flex-1 flex-col gap-2 bg-white rounded-md shadow-md'>
         <TableHeader headers={headers} />
         <TableBody>
           {displayedRows.map((row, index) => (

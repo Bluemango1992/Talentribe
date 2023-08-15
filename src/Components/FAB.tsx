@@ -4,8 +4,8 @@ interface FABProps {
   
 export const FAB = ({ icon }: FABProps) => {
     return (
-      <div className="bg-white flex items-center justify-center p-4 text-slate-600 rounded-full shadow-lg shadow-slate-600 border border-slate-200">
-          {icon} 
+      <div className="bg-slate-100 rounded-full h-10 w-10 flex items-center justify-center">
+          {icon}
       </div>
     );
   };

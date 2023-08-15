@@ -5,31 +5,19 @@ SHOW DATABASES;
 SHOW TABLES;
 
 --@block
-SELECT * FROM candidates;
+SELECT * FROM responsibilities;
 
 --@block
 USE talentribe;
 
 --@block
 
-CREATE TABLE organisations (
-    id INT PRIMARY KEY,
-    name VARCHAR(255),
-    industry VARCHAR(255),
-    liveJobs INT,
-    lastClientContacted VARCHAR(255),
-    lastContacted DATE,
-
-
-);
+SELECT * FROM candidates WHERE candidateID = 1;
 
 --@block
 
-INSERT INTO organisations (id, name, industry, liveJobs, lastClientContacted, lastContacted)
-VALUES 
-(4, 'Microsoft', 'Technology', 20, 'Alice Johnson', '2021-03-10'),
-(5, 'Amazon', 'Retail & Technology', 12, 'Robert White', '2021-04-05'),
-(6, 'Ford', 'Automobile', 8, 'Eva Green', '2021-05-20'),
-(7, 'Netflix', 'Entertainment', 7, 'Oscar Wilde', '2021-06-01');
+INSERT IGNORE INTO candidates (candidateID, name, reviewDate, responsibleAgent, addedBy, reviewStatus, objective, status, currentJob, currentCompany, location, jobType, salaryRange)
+VALUES (1, 'Alice Green', '2023-08-05', 1, 1, 'Open', 'Looking for a challenging position in XYZ industry.', 'Active', 'Software Developer', 'TechCorp Ltd.', 'New York, NY', 'Full Time', '$70,000 - $90,000');
 
-
+--@block
+DELETE TABLES candidates;
