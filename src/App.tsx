@@ -1,7 +1,7 @@
 
 import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
 import { H1, P2 } from './Typography';
-import { Candidates , CandidatesProfile , Clients, Jobs, Organisations } from './Pages';
+import { Candidates , CandidatesProfile , Clients, Jobs, Organisations, OrganisationsProfile } from './Pages';
 import { SignIn , SignUp } from './Components/auth';
 
 
@@ -9,13 +9,14 @@ const App = () => {
   return (
       <Router>
           <Routes>
-            <Route path='/signin' element={<SignIn />} />
+            <Route path='/' element={<SignIn />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/clients' element={<Clients />} />
             <Route path='/jobs' element={<Jobs />} />
             <Route path='/candidates' element={<Candidates />} />
             <Route path="/candidates/:id" element={<CandidatesProfile />} />
             <Route path='/organisations' element={<Organisations />} />
+            <Route path='/organisations/:id' element={<OrganisationsProfile />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
       </Router>
@@ -33,6 +34,10 @@ const NotFound = () => {
     </div>
   );
 }
+
+
+
+
 
 
 

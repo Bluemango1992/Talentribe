@@ -11,7 +11,7 @@ interface LayoutProps {
             <Header />
                 <div className='flex flex-row flex-1'>
                     <SideBar />
-                    <div className='flex flex-col flex-1 m-8 gap-4'>
+                    <div className='flex flex-col flex-1 p-6'>
                         {children}
                     </div>
                 </div>

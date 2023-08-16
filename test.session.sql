@@ -5,7 +5,7 @@ SHOW DATABASES;
 SHOW TABLES;
 
 --@block
-SELECT * FROM responsibilities;
+SELECT * FROM clients;
 
 --@block
 USE talentribe;

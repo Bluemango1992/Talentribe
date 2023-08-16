@@ -15,7 +15,7 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
   
   const TableHeader: React.FC<TableHeaderProps> = ({ headers }) => {
     return (
-      <div className='flex flex-row border-b border-gray-200 bg-slate-50 px-6 py-2'>
+      <div className='flex flex-row border-b border-gray-200 bg-slate-200 px-6 py-2'>
         {headers.map((header, index) => (
           <TableCell key={index}>
             {header}

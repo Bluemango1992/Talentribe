@@ -7,3 +7,6 @@ export { default as Table } from './Table';
 export { default as Input } from './Input';
 export { default as Avatar } from './Avatar';
 export { FAB } from './FAB';
+export { default as Chip } from './Chip';
+export { default as Dropdown } from './Dropdown';
+
