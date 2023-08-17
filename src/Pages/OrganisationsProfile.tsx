@@ -1,23 +1,54 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import { Layout } from "."
 import { Paper, Breadcrumbs, Button, Chip, FAB } from '../Components'
 import { H3, H4, P, Caption, P2, H5 } from "../Typography"
-import { FaBuilding, FaInternetExplorer, FaPhone, FaTrash, FaVoicemail, FaWeibo } from "react-icons/fa"
+import { FaInternetExplorer, FaPhone, FaTrash, FaVoicemail } from "react-icons/fa"
 
 const OrganisationsProfile = () => {
+
+    const [organisationData, setOrganisationData] = useState<any[]>([]);
+    const [jobsData, setJobsData] = useState<any[]>([]);
+    const [locationsData, setLocationsData] = useState<any[]>([]);
+
+    const { organisationID } = useParams<{ organisationID: string }>();
+
+    useEffect(() => {
+        // Fetch organisations
+        fetch('http://localhost:3001/organisations')
+        .then((res) => res.json())
+        .then(data => setOrganisationData(data))
+        
+        fetch('http://localhost:3001/jobs')
+        .then((res) => res.json())
+        .then(data => {
+            const filteredJobs = data.filter((job: any) => job.organisationID === Number(organisationID));
+            setJobsData(filteredJobs);
+        }
+        )
+        fetch('http://localhost:3001/locations')
+        .then((res) => res.json())
+        .then(data => {
+            const filteredLocations = data.filter((location: any) => location.organisationID === Number(organisationID));
+            setLocationsData(filteredLocations);
+        }
+        )
+    }, [organisationID]);
+
+    console.log(locationsData);
 
     return(
         <Layout>
             <div className="flex flex-col mb-4 ju">
-            <OrganistionsCard />
+            <OrganistionsCard data={organisationData} />
             <HistoryCard />
             </div>
             <div className="flex gap-3">
                 <div className="flex flex-1 max-h-[calc(100vh-200px)] overflow-y-auto">
-                    <JobsCard />
+                    <JobsCard data={jobsData} />
                 </div>
             <div className="flex flex-col gap-4 flex-1">
-            <LocationCard />
+            <LocationCard data={locationsData} />
             <Notes />
             </div>
             </div>
@@ -28,36 +59,34 @@ const OrganisationsProfile = () => {
 
 export default OrganisationsProfile
 
-const company = {
-    name: 'Helen Keller International',
-    industry: 'Non-Profit',
-    location: 'New York, NY',
-    website: 'https://www.hki.org/',
-}
 
+const OrganistionsCard = ({data}) => {
 
-const OrganistionsCard = () => {
-    
-        return(
-            <Paper>
-                <div className="flex flex-row gap-4 p-4 items-center justify-between">
-                      
+    const { organisationID } = useParams<{ organisationID: string }>();
+    const org = data.find((org: any) => org.organisationID === Number(organisationID));
+
+    if (!org) {
+        return <div>Organisation not found</div>;
+    }
+
+    return (
+        <Paper>
+            <div className="flex flex-row gap-4 p-4 items-center justify-between">
                 <div className="flex flex-col gap-1 p-4"> 
-                <H3>{company.name}</H3>
-                <Breadcrumbs items={[company.industry, company.location]} />
-                <Hyperlink href={company.website}>{company.website}</Hyperlink>
+                    <H3>{org.companyName}</H3>
+                    <Breadcrumbs items={[org.industry, org.location]} />
+                    <Hyperlink href={org.website}>{org.website}</Hyperlink>
                 </div>
                 <ClientContacts />
                 <div className="flex flex-row gap-2">
-                <FAB icon={<FaPhone />} />
-                <FAB icon={<FaVoicemail />} />
-                <FAB icon={<FaInternetExplorer />} />
+                    <FAB icon={<FaPhone />} />
+                    <FAB icon={<FaVoicemail />} />
+                    <FAB icon={<FaInternetExplorer />} />
                 </div>
-                </div>
-            </Paper>
-        )
-    }
-
+            </div>
+        </Paper>
+    );
+}    
 
 const HistoryCard = () => {
     
@@ -146,25 +175,21 @@ const Hyperlink = ({children, href}) => {
 
 
 interface Jobs {
-    jobtitle: string;
-    client: string;
+    jobID: number;
+    organisationID: number;
+    title: string;
+    jobType: string;
     location: string;
-    jobtype: string;
-    salary: string;
-    Shortlist: number;
+    salaryRange: string;
+    shortlist: number;
     CVsent: number;
-    Interview: number;
-    Offer: number;
-    Rejected: number;
+    interview: number;
+    offer: number;
+    rejected: number;
 }
 
 
-const JobsCard = () => {
-    
-        const data = [
-            { jobtitle : 'Software Engineer', client : 'Helen Keller International', location : 'New York, NY', jobtype : 'Permanent', salary : '£100,000-£150,000', Shortlist : 1, CVsent : 2, Interview : 1, Offer : 0, Rejected : 0},
-            { jobtitle : 'Software Engineer', client : 'Helen Keller International', location : 'New York, NY', jobtype : 'Permanent', salary : '£100,000-£150,000', Shortlist : 1, CVsent : 2, Interview : 1, Offer : 0, Rejected : 0},
-        ]
+const JobsCard = ({data}) => {
 
         return (
             <div className="bg-white p-4 flex flex-1 flex-col" >
@@ -176,20 +201,20 @@ const JobsCard = () => {
                     return(
                        <div className="flex flex-col mb-4 border-b border-slate-100 pb-4 gap-1">
                         <div className="flex flex-row justify-between">
-                        <H4>{item.jobtitle}</H4>
-                        <Chip>{item.jobtype}</Chip>
+                        <H4>{item.title}</H4>
+                        <Chip>{item.jobType}</Chip>
                         </div>
                         <div className="flex flex-col justify-between gap-1 m-1">
                         <P2>{item.location}</P2>
-                        <Caption>{item.salary}</Caption>
+                        <Caption>{item.salaryRange}</Caption>
                         </div>
                         
                         <div className="flex flex-1 gap-1">
-                        <KPI title="Shortlist">{item.Shortlist}</KPI>
+                        <KPI title="Shortlist">{item.shortlist}</KPI>
                         <KPI title="CV sent">{item.CVsent}</KPI>
-                        <KPI title="Interview">{item.Interview}</KPI>
-                        <KPI title="Offer">{item.Offer}</KPI>
-                        <KPI title="Rejected">{item.Rejected}</KPI>
+                        <KPI title="Interview">{item.interview}</KPI>
+                        <KPI title="Offer">{item.offer}</KPI>
+                        <KPI title="Rejected">{item.rejected}</KPI>
                         </div>
                         </div>
                     )
@@ -220,48 +245,8 @@ const JobsCard = () => {
         postalCode: string;
     }
 
-    const LocationCard = () => {
+    const LocationCard = ({data}) => {
 
-        const data = [
-            {
-                locationID : 1,
-                officeType : "Head Office",
-                address : "123 Main Street",
-                city : "New York",
-                state : "NY",
-                country : "USA",
-                postalCode : "12345"
-            },
-            {
-                locationID : 2,
-                officeType : "Head Office",
-                address : "123 Main Street",
-                city : "New York",
-                state : "NY",
-                country : "USA",
-                postalCode : "12345"
-            },
-            {
-                locationID : 3,
-                officeType : "Head Office",
-                address : "123 Main Street",
-                city : "New York",
-                state : "NY",
-                country : "USA",
-                postalCode : "12345"
-            },
-            {
-                locationID : 4,
-                officeType : "Head Office",
-                address : "123 Main Street",
-                city : "New York",
-                state : "NY",
-                country : "USA",
-                postalCode : "12345"
-            },
-
-        ]
-    
         return (
 
             <Paper>

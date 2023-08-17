@@ -5,19 +5,22 @@ SHOW DATABASES;
 SHOW TABLES;
 
 --@block
-SELECT * FROM clients;
+SELECT * FROM locations;
 
 --@block
 USE talentribe;
 
 --@block
+ALTER TABLE locations DROP PRIMARY KEY;
 
-SELECT * FROM candidates WHERE candidateID = 1;
-
---@block
-
-INSERT IGNORE INTO candidates (candidateID, name, reviewDate, responsibleAgent, addedBy, reviewStatus, objective, status, currentJob, currentCompany, location, jobType, salaryRange)
-VALUES (1, 'Alice Green', '2023-08-05', 1, 1, 'Open', 'Looking for a challenging position in XYZ industry.', 'Active', 'Software Developer', 'TechCorp Ltd.', 'New York, NY', 'Full Time', '$70,000 - $90,000');
 
 --@block
-DELETE TABLES candidates;
+ALTER TABLE locations MODIFY locationID INT AUTO_INCREMENT PRIMARY KEY;
+
+--@block
+INSERT INTO locations (organisationID, officeType, address, city, state, country, postalCode) VALUES
+(1, 'Head Office', '123 Tech Street', 'Silicon Valley', 'CA', 'USA', '94025'),
+(1, 'Branch Office', '456 Tech Avenue', 'San Francisco', 'CA', 'USA', '94105'),
+(2, 'Head Office', '789 Finance Blvd', 'London', 'Greater London', 'UK', 'E1W 3TJ'),
+(2, 'Branch Office', '101 Fin Street', 'Edinburgh', 'Lothian', 'UK', 'EH1 3TY');
+

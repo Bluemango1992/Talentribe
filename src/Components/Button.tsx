@@ -16,7 +16,7 @@ const sizeStyles = {
 
 const variantStyles = {
     primary: 'bg-slate-800 hover:bg-slate-900 text-white',
-    secondary: 'bg-slate-200 hover:bg-slate-300',
+    secondary: 'bg-slate-500 hover:bg-slate-400 text-white',
     tertiary: 'bg-transparent hover:bg-slate-100',
 };
 

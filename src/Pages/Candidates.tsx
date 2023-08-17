@@ -38,10 +38,9 @@ const Candidates = () => {
     });
   }, []);
 
-  const handleRowClick = (candidateID: string) => {
-    console.log("Row clicked with candidate ID:", candidateID);
-    navigate(`/candidates/${candidateID}`);
-}
+  const handleRowClick = (row: any) => {
+    navigate(`/candidates/${row.candidateID}`);
+};
 
   return (
     <Layout>

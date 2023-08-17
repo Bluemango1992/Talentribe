@@ -15,7 +15,7 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
   
   const TableHeader: React.FC<TableHeaderProps> = ({ headers }) => {
     return (
-      <div className='flex flex-row border-b border-gray-200 bg-slate-200 px-6 py-2'>
+      <div className='flex flex-row border-b border-slate-300 bg-white font-semibold mb-2 px-6 py-2'>
         {headers.map((header, index) => (
           <TableCell key={index}>
             {header}
@@ -34,10 +34,8 @@ const TableCell = ({ children }: { children: React.ReactNode }) => {
   const TableRow: React.FC<TableRowProps> = ({ row, keys, onRowClick }) => {
 
     const handleClick = () => {
-      if (onRowClick && row.candidateID) {
-          onRowClick(row.candidateID); 
-      }
-  };  
+      onRowClick(row);
+    }
   
     return (
         <div className='flex flex-row border-b border-gray-200 hover:bg-gray-100' onClick={handleClick}>
