@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'maven-pro': ['Maven Pro', 'sans'],
+      },
       colors: {
         customBlue: '#123456',
       },

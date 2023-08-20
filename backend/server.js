@@ -7,6 +7,7 @@ const PORT = 3001;
 
 // Use the cors middleware
 app.use(cors());
+app.use(express.json());
 
 app.get('/clients', async (req, res) => {
     try {
@@ -89,6 +90,54 @@ app.get('/locations', async (req, res) => {
     }
 });
 
+app.post('/organisations', async (req, res) => {
+    try {
+        const { companyName, industry, lastClientContact, location, website } = req.body;
+        const [result] = await pool.query(
+            "INSERT INTO organisations (companyName, industry, lastClientContact, location, website) VALUES (?, ?, ?, ?, ?)",
+            [companyName, industry, lastClientContact, location, website]
+        );
+        res.status(201).json({ message: 'Organisation added successfully!', organisationID: result.insertId });
+    } catch (error) {
+        console.error("Error adding organisation: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.get('/notes', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM notes");
+        res.json(rows);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.post('/notes', async (req, res) => {
+    try {
+        const { text, organisationID } = req.body;
+        const [result] = await pool.query(
+            "INSERT INTO notes (text, organisationID) VALUES (?, ?)",
+            [text, organisationID]
+        );
+        res.status(201).json({ message: 'Note added successfully!', noteID: result.insertId });
+    } catch (error) {
+        console.error("Error adding note: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.delete('/notes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;  // Extract the ID from the URL parameter
+        await pool.query("DELETE FROM notes WHERE id = ?", [id]);
+        res.status(200).json({ message: 'Note deleted successfully!' });
+    } catch (error) {
+        console.error("Error deleting note: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 
 app.listen(PORT, () => {

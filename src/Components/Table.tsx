@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const TableCell = ({ children }: { children: React.ReactNode }) => {
     return (
-      <div className='p-2 w-full'>
+      <div className='font-maven-pro text-sm w-full text-gray-900 px-6 py-2'>
         {children}
       </div>
     )

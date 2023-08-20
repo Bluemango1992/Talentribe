@@ -10,7 +10,7 @@ const SideBar = () => {
     };
   
     return (
-      <div className='bg-slate-300 w-12 flex flex-col items-center py-5 gap-5'>
+      <div className='bg-slate-300 w-12 fixed mt-10 h-full flex flex-col items-center py-5 gap-5'>
           <Link to="/jobs" className="my-2" onClick={() => handleLinkClick('jobs')}>
             <FaBriefcase size={24} color={selected === 'jobs' ? '#788475' : '#5e5d5c'} />
           </Link>

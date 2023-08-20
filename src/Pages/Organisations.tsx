@@ -1,4 +1,4 @@
-import { Dropdown, Table, Input, Button } from '../Components';
+import { Dropdown, Table, Input, Button, SelectField } from '../Components';
 import { Layout } from '../Pages';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ const Organisations = () => {
 
   const [companyFilter, setCompanyFilter] = useState<string | null>(null);
   const [industryFilter, setIndustryFilter] = useState<string | null>(null);
-  const [contactFilter, setContactFilter] = useState<string | null>(null);
+  const [contactFilter] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch organisations
@@ -61,8 +61,6 @@ const Organisations = () => {
   .filter(org => !contactFilter || org.lastClientContact.startsWith(contactFilter));
 
   const handleAddNewOrganisation = (newOrganisation: any) => {
-    // Logic to add the new organisation to your data (e.g., API call)
-    // For now, we'll just add it to the local state:
     setOrganisationData(prevData => [...prevData, newOrganisation]);
     setIsModalOpen(false);
   };
@@ -77,27 +75,31 @@ const Organisations = () => {
     setIsModalOpen(false);
   };
 
-
   return (
     <Layout>
       <div className="flex justify-between mb-2">
-      <H2>Organisations</H2>
-      <Button onClick={handleAddOrganisation} variant='secondary' size='medium'>Add Organisation</Button>
-      </div>
-      <div className="grid grid-cols-3 gap-4 mb-4 w-1/3">
-      <Dropdown type='text' placeholder='Company' options={['All', ...new Set(organisationData.map(org => org.companyName))]} onSelect={handleCompanySelect} />
-      <Dropdown type='text' placeholder='Industry' options={['All', ...new Set(organisationData.map(org => org.industry))]} onSelect={handleIndustrySelect} />
-      </div>
-      <Table
-        data={filteredData}
-        headers={['Company Name', 'Industry', 'Last Client Contact']}
-        keys={['companyName', 'industry', 'lastClientContact']}
-        onRowClick={handleRowClick}
-      />
-      <Model isOpen={isAddOrganisationOpen} onClose={handleCloseAddOrganisation}>
-        <OrganisationForm onSubmit={handleAddNewOrganisation} />
-      </Model>
+        <H2>Organisations</H2>
+        <Button onClick={handleAddOrganisation} variant='secondary' size='medium'>Add Organisation</Button>
+        </div>
+        <div className="grid grid-cols-3 gap-4 mb-4 w-1/3">
+        <SelectField type='text' placeholder='Company' options={['All', ...new Set(organisationData.map(org => org.companyName))]} onSelect={handleCompanySelect} />
+        <SelectField type='text' placeholder='Industry' options={['All', ...new Set(organisationData.map(org => org.industry))]} onSelect={handleIndustrySelect} />
+          </div>
+          {filteredData.length === 0 ? (
+            <div className="text-center h-full">No organisations found.</div>
+            ) : (
+                <Table
+                  data={filteredData}
+                  headers={['Company Name', 'Industry', 'Last Client Contact']}
+                  keys={['companyName', 'industry', 'lastClientContact']}
+                  onRowClick={handleRowClick}
+                />
+            )}
+        <Model isOpen={isAddOrganisationOpen} onClose={handleCloseAddOrganisation}>
+          <OrganisationForm onSubmit={handleAddNewOrganisation} />
+        </Model>
     </Layout>
+    
   );
 }
 
@@ -123,13 +125,21 @@ const Model = ({isOpen, onClose, children }: any) => {
 }
   
 
-const OrganisationForm = ({ onSubmit }: any) => {
+const OrganisationForm = () => {
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    companyName: string;
+    industry: string;
+    location?: string;
+    website?: string;
+    }>({
     companyName: "",
     industry: "",
-    lastClientContact: ""
+    location: "",
+    website: "",
   });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -138,18 +148,83 @@ const OrganisationForm = ({ onSubmit }: any) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(formData);
-  };
+    setIsSubmitted(true);
+    
+    if (formData.companyName && formData.industry && formData.location && formData.website) {
+        // POST the formData to the backend
+        fetch('http://localhost:3001/organisations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from your backend
+            // For example, if the backend sends a confirmation message:
+            console.log(data.message);
+            
+            // If you want to clear the form after a successful submission:
+            setFormData({
+                companyName: "",
+                industry: "",
+                location: "",
+                website: "",
+            });
+            setIsSubmitted(false);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+};
 
   return (
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-96'>
         <H4>Add Organisation</H4>
-      <Input name='companyName' type='text' placeholder="HSBS, Lloyds TSB ..." label="Company Name" value={formData.companyName} onChange={handleChange} />
-      <Input name='industry' type='text' placeholder="Tech, Finance, Healthcare ..." label="Industry" value={formData.industry} onChange={handleChange} />
-      <button className='bg-slate-800 text-white py-2 px-1 font-semibold rounded-md hover:bg-slate-700' type="submit">Add Organisation</button>
+      <Input 
+        name='companyName' 
+        type='text' 
+        placeholder="HSBC, Lloyds TSB ..." 
+        label="Company Name" 
+        errorMessage={isSubmitted && !formData.companyName ? 'Please fill in field' : undefined}
+        value={formData.companyName} 
+        onChange={handleChange} 
+      />
+      <Input 
+        name='industry' 
+        type='text' 
+        placeholder="Tech, Finance, Healthcare ..." 
+        label="Industry" 
+        errorMessage={isSubmitted && !formData.industry ? 'Please fill in field' : undefined}
+        value={formData.industry} 
+        onChange={handleChange} 
+      />
+      <Input
+        name='location'
+        type='text'
+        placeholder="London, Manchester, New York ..."
+        label="Location"
+        errorMessage={isSubmitted && !formData.location ? 'Please fill in field' : undefined}
+        value={formData.location}
+        onChange={handleChange}
+      />
+      <Input
+        name='website'
+        type='text'
+        placeholder="www.hsbc.com"
+        label="Website"
+        errorMessage={isSubmitted && !formData.website ? 'Please fill in field' : undefined}
+        value={formData.website}
+        onChange={handleChange}
+      />
+      <Button type='submit' variant='primary' size='medium' onClick={handleSubmit}>Add Organisation</Button>
       </form>
   );
 };
+
+
 
 
 

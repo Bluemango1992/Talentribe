@@ -14,3 +14,10 @@ body {
 code {
     font-family: monospace;
   }
+
+@font-face {
+  font-family: 'Maven Pro';
+  src: url('/fonts/static/MavenPro-Regular.ttf') format('truetype'); 
+  font-weight: normal;
+  font-style: normal;
+}
