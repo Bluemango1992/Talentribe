@@ -26,7 +26,7 @@ interface LayoutProps {
         <div className='bg-slate-800 fixed w-full h-12 top-0 left-0 z-50 flex px-4 py-1 items-center justify-between'>
             <div className='flex flex-row items-center space-x-2'>
             <img src={logo} alt="Talentribe" className='h-8' />
-            <div className='font-maven-font text-white text-lg font-normal tracking-widest'>
+            <div className='font-maven-font text-white text-lg font-bold tracking-widest'>
                 <span className='mr-2'>Talentribe</span>
                 </div>
             </div>

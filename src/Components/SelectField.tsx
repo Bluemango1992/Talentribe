@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { FaFlag } from "react-icons/fa";
 
-const SelectField = ({ placeholder, options, label, onSelect }: any) => {
+const SelectField = ({ placeholder, options, label, onSelect, errorMessage }: any) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(placeholder);
-  
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+
+        // Add the event listener for mousedown (better than click for this purpose)
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isOpen]);
+
     const handleSelect = (option: string) => {
       setSelectedOption(option);
-      onSelect(option);
+      onSelect({ target: { name: name, value: option }}); // Adjust this line
       setIsOpen(false);
     };
+    
   
     return (
-      <div className="relative">
-        <label className="text-sm font-semibold text-gray-500">{label}</label>
+      <div className="relative w-full font-maven-pro" ref={wrapperRef}>
+        <label className="text-sm font-bold text-gray-500">{label}</label>
+        {errorMessage && <span className={`flex gap-2 items-center text-sm text-red-500`}><FaFlag />{errorMessage}</span>}
         <button
-          className="w-full bg-white border border-gray-500 rounded-md px-4 py-2 text-sm font-medium flex justify-between items-center"
+          className="w-full bg-white border border-gray-500 rounded-md px-4 py-2 text-sm font-medium flex justify-between items-center mb-1"
           onClick={() => setIsOpen(!isOpen)}
         >
           {selectedOption}
@@ -35,22 +55,27 @@ const SelectField = ({ placeholder, options, label, onSelect }: any) => {
             </svg>
           </span>
         </button>
+        
         {isOpen && (
-          <div className="absolute top-full w-full bg-white border border-gray-500 rounded-md px-4 py-2 mt-2 text-sm font-medium">
-            {options.map((option: string, index: number) => (
-              <div
-                key={index}
-                className="w-full py-1 hover:bg-gray-200 cursor-pointer"
-                onClick={() => handleSelect(option)}
-              >
-                {option}
-              </div>
-            ))}
-          </div>
-        )}
+            <div 
+              className="absolute top-full w-full bg-white border border-gray-500 rounded-md px-4 py-2 text-sm font-medium max-h-60 overflow-y-auto postion-absolute z-10 scrollbar-track-white scrollbar-thumb-rounded">
+              {options.map((option: string, index: number) => (
+                <div
+                  key={index}
+                  className="w-full py-1 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => handleSelect(option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          )}
+
       </div>
     );
   }
 
   export default SelectField;
+
+
   

@@ -33,11 +33,31 @@ app.post('/clients', async (req, res) => {
     }
 });
 
+app.get('/clients/:id', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM clients WHERE clientID = ?", [req.params.id]);
+        res.json(rows[0]);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 
 app.get('/jobs', async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM jobs");
         res.json(rows);
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+app.get('/jobs/:id', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM jobs WHERE jobID = ?", [req.params.id]);
+        res.json(rows[0]);
     } catch (error) {
         console.error("Error fetching data: ", error);
         res.status(500).json({ message: "Internal Server Error" });

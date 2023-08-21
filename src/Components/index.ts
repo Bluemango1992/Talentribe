@@ -11,4 +11,5 @@ export { default as Chip } from './Chip';
 export { default as Dropdown } from './Dropdown';
 export { default as SelectField } from './SelectField';
 export { default as Modal } from './Modal';
+export { default as ListItem } from './ListItem';
 

@@ -12,7 +12,7 @@ interface InputProps {
 
 const Input = ({ name, label, type, placeholder, onChange, value, errorMessage }: InputProps) => {
     return (
-        <div className={`flex flex-col gap-1`}>
+        <div className={`flex flex-col gap-1 z-10`}>
             <label className={`text-sm font-semibold text-gray-500`}>{label}</label>
             <input 
                 className={`p-2 border border-gray-500 rounded-md text-sm`} 

@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Layout } from "."
-import { Paper, Breadcrumbs, Button, Chip, FAB, Modal, Input } from '../Components'
-import { H3, H4, Caption, P2, H5, H6, P } from "../Typography"
+import { Paper, Breadcrumbs, Button, Chip, FAB, Modal, Input, SelectField } from '../Components'
+import { H3, H4, Caption, P2, H5, H6, P, H2 } from "../Typography"
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaInternetExplorer, FaPhone, FaTrash, FaVoicemail } from "react-icons/fa"
 
 const OrganisationsProfile = () => {
 
     const [organisationData, setOrganisationData] = useState<any[]>([]);
     const [jobsData, setJobsData] = useState<any[]>([]);
-    const [locationsData, setLocationsData] = useState<any[]>([]);
     const [clientsData, setClientsData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -30,13 +29,7 @@ const OrganisationsProfile = () => {
             const jobsData = await jobsResponse.json();
             const filteredJobs = jobsData.filter((job: any) => job.organisationID === Number(organisationID));
             setJobsData(filteredJobs);
-    
-            // Fetch locations
-            const locationsResponse = await fetch('http://localhost:3001/locations');
-            const locationsData = await locationsResponse.json();
-            const filteredLocations = locationsData.filter((location: any) => location.organisationID === Number(organisationID));
-            setLocationsData(filteredLocations);
-    
+
             // Fetch clients
             const clientsResponse = await fetch('http://localhost:3001/clients');
             const clientsData = await clientsResponse.json();
@@ -62,7 +55,7 @@ const OrganisationsProfile = () => {
                         <HistoryCard />
                     </div>
                     <div className="flex gap-3">
-                    <LocationCard data={locationsData} />
+                    
                         <div className="flex flex-1 flex-col gap-4">
                             <JobsCard data={jobsData} />
                         </div>
@@ -93,21 +86,40 @@ type OrganisationsCardProps = {
 
 const OrganistionsCard = ({data} : OrganisationsCardProps) => {
 
+    const [locationsData, setLocationsData] = useState<any[]>([]);
+
+    const { organisationID } = useParams<{ organisationID: string }>();
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            // Fetch locations
+            const locationsResponse = await fetch('http://localhost:3001/locations');
+            const locationsData = await locationsResponse.json();
+            const filteredLocations = locationsData.filter((location: any) => location.organisationID === Number(organisationID));
+            setLocationsData(filteredLocations);
+        }
+        fetchData();
+    }, [organisationID]);
+
+
     if (!data || !data.companyName || !data.industry || !data.location || !data.website) {
         return <div>No Data Found</div>;
     }
 
     return (
         <Paper>
-            <div className="flex flex-1 gap-4 p-8 items-start justify-between">
+            <div className="flex p-8 items-center justify-between">
                     <div className="flex flex-col gap-1">
-                    <H4>{data.companyName}</H4>
+                    <H2>{data.companyName}</H2>
                     <Breadcrumbs items={[data.industry, data.location]} />
                     <Hyperlink href={data.website}>
                         {data.
                         website}
                     </Hyperlink>
                 </div>
+
+                    <LocationCard data={locationsData} />
+                
                 <div className="flex flex-row gap-2">   
                     <FAB icon={<FaPhone />} />
                     <FAB icon={<FaVoicemail />} />
@@ -223,6 +235,8 @@ type JobsCardProps = {
 
 const JobsCard = ({data} : JobsCardProps) => {
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
         return (    
             <Paper>
                 <div className="flex w-full flex-col p-4 justify-between">
@@ -231,7 +245,7 @@ const JobsCard = ({data} : JobsCardProps) => {
                 <H3>Jobs</H3>
                 <Caption>{data.length} results</Caption>
                 </div>
-                <Button variant="tertiary" size="small" onClick={() => {}} >Add Job</Button>
+                <Button variant="tertiary" size="small" onClick={() => {setIsModalOpen(true)}}>Add Job</Button>
                 </div>
                 {data.length === 0 && <EmptyState message="No jobs found." />}
                 {data.map((item) => {
@@ -257,10 +271,132 @@ const JobsCard = ({data} : JobsCardProps) => {
                     )
                 }
                 )}
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                    <JobForm setIsModalOpen={setIsModalOpen} />
+                </Modal>
                 </div>
             </Paper>
         )
     }
+
+    const JobForm = ({ setIsModalOpen }: { setIsModalOpen: (isOpen: boolean) => void }) => {
+        const [formData, setFormData] = useState({
+            title: '',
+            jobType: '',
+            location: '',
+            minSalary: '',
+            maxSalary: '',
+            currencyType: '',
+        });
+
+        const [formSubmitted, setFormSubmitted] = useState(false);
+
+        const { organisationID } = useParams();
+
+        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.target;
+            setFormData(prevState => ({ ...prevState, [name]: value }));
+        };
+
+        const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            setFormSubmitted(true);
+
+            if (formData.title && formData.jobType && formData.location && formData.minSalary && formData.maxSalary && formData.currencyType) {
+                fetch('http://localhost:3001/jobs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: formData.title,
+                        jobType: formData.jobType,
+                        location: formData.location,
+                        minSalary: formData.minSalary,
+                        maxSalary: formData.maxSalary,
+                        currencyType: formData.currencyType,
+                        organisationID: organisationID,
+                    }),
+                })
+                .then((response) => {
+                    response.json();
+                    setIsModalOpen(false);
+                })
+                .catch((error) => {
+                    console.error("Error adding job: ", error);
+                });
+            }
+        };
+
+
+        const JOB_TYPES = ["Full Time", "Part Time", "Contract", "Temporary", "Internship"];
+
+        const CURRENCY_TYPES = ["USD", "EUR", "GBP", "INR", "JPY"];
+
+
+        return (
+            <div className="flex flex-col gap-4 min-w-[400px] max-w-[500px]">
+                <H4>Add a new job</H4>
+                <div className="flex flex-col gap-2">
+                    <Input 
+                        label="Job Title"
+                        type="text"
+                        errorMessage={formSubmitted && !formData.title ? 'Please fill in field' : undefined}
+                        placeholder="Accountant, Software Developer, etc."
+                        onChange={handleInputChange}
+                        value={formData.title}
+                        name="title"
+                    />
+                    <Input 
+                    label="Location"
+                    type="text"
+                    errorMessage={formSubmitted && !formData.location ? 'Please fill in field' : undefined}
+                    placeholder="Location"
+                    onChange={handleInputChange}
+                    value={formData.location}
+                    name="location"
+                    />
+                    <SelectField
+                        label="Job Type"
+                        onSelect={(option: string) => setFormData(prevState => ({ ...prevState, jobType: option }))}
+                        options={JOB_TYPES}
+                        placeholder="Select Job Type"
+                    />
+                    <div className="flex flex-row gap-2 justify-between">
+                    <SelectField
+                            label="Currency"
+                            onSelect={(value: string) => setFormData(prevState => ({ ...prevState, currencyType: value }))}
+                            options={CURRENCY_TYPES}
+                            placeholder="GBP"
+                        />
+                      <Input 
+                        label="Minimum Salary"
+                        type="number"
+                        errorMessage={formSubmitted && !formData.minSalary ? 'Please fill in field' : undefined}
+                        placeholder="Enter Min Salary"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prevState => ({ ...prevState, minSalary: e.target.value }))}
+                        value={formData.minSalary}
+                        name="minSalary"
+                    />
+
+                    <Input 
+                        label="Maximum Salary"
+                        type="number"
+                        errorMessage={formSubmitted && !formData.maxSalary ? 'Please fill in field' : undefined}
+                        placeholder="Enter Max Salary"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prevState => ({ ...prevState, maxSalary: e.target.value }))}
+                        value={formData.maxSalary}
+                        name="maxSalary"
+                    />
+                    </div>
+                    </div>
+                    <Button variant="primary" onClick={handleSubmit}>Submit</Button>
+                </div>
+
+        );
+
+    }
+    
 
     type KPIProps = {
         children: React.ReactNode;
@@ -293,17 +429,11 @@ const JobsCard = ({data} : JobsCardProps) => {
         const [isModalOpen, setIsModalOpen] = useState(false);
     
         return (
-            <Paper>
-                <div className="flex flex-1 flex-col gap-4 justify-between items-center p-4 min-w-[300px]">
-                    <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-col gap-1">
-                            <H4>Locations</H4>
-                            <Caption>{data.length} results</Caption>
-                        </div>
+                <div className="flex flex-col min-w-[600px]">
+                    <div className="flex justify-end">
                         <Button variant="tertiary" size="small" onClick={() => setIsModalOpen(true)}>Add Location</Button>
                     </div>
                     <ul className="flex flex-col w-full">
-                        {data.length === 0 && <EmptyState message="No locations found." />}
                         {data.map((item) => (
                             <li key={item.locationID}>
                                 <H6>{item.officeType}</H6>
@@ -319,7 +449,6 @@ const JobsCard = ({data} : JobsCardProps) => {
                         <LocationForm setIsModalOpen={setIsModalOpen} />
                     </Modal>
                 </div>
-            </Paper>
         )
     }
     
