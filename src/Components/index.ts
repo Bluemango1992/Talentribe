@@ -10,3 +10,5 @@ export { FAB } from './FAB';
 export { default as Chip } from './Chip';
 export { default as Dropdown } from './Dropdown';
 export { default as SelectField } from './SelectField';
+export { default as Modal } from './Modal';
+

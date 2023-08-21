@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Layout } from "."
-import { Paper, Breadcrumbs, Button, Chip, FAB } from '../Components'
+import { Paper, Breadcrumbs, Button, Chip, FAB, Modal, Input } from '../Components'
 import { H3, H4, Caption, P2, H5, H6, P } from "../Typography"
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaInternetExplorer, FaPhone, FaTrash, FaVoicemail } from "react-icons/fa"
 
@@ -12,7 +12,6 @@ const OrganisationsProfile = () => {
     const [locationsData, setLocationsData] = useState<any[]>([]);
     const [clientsData, setClientsData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-
 
 
     const { organisationID } = useParams<{ organisationID: string }>();
@@ -57,7 +56,6 @@ const OrganisationsProfile = () => {
                     <p>Loading...</p>
                 </div>
             ) : (
-                // This is your actual content that will be displayed once the data has loaded
                 <>
                     <div className="flex flex-col mb-4 ju">
                         {organisationData.length === 0 ? <p>No data found</p> : <OrganistionsCard data={organisationData[0]} />}
@@ -65,10 +63,10 @@ const OrganisationsProfile = () => {
                     </div>
                     <div className="flex gap-3">
                     <LocationCard data={locationsData} />
-                        <div className="flex flex-1 max-h-[calc(100vh-200px)] overflow-y-auto">
+                        <div className="flex flex-1 flex-col gap-4">
                             <JobsCard data={jobsData} />
                         </div>
-                        <div className="flex flex-col gap-4 flex-1">
+                        <div className="flex flex-1 flex-col gap-4">
                              <ClientContacts data={clientsData} />
                             <Notes />
                         </div>
@@ -82,7 +80,18 @@ const OrganisationsProfile = () => {
 
 export default OrganisationsProfile
 
-const OrganistionsCard = ({data}) => {
+
+type OrganisationsCardProps = {
+    data: {
+        organisationID: number;
+        companyName: string;
+        industry: string;
+        location: string;
+        website: string;
+    }
+}
+
+const OrganistionsCard = ({data} : OrganisationsCardProps) => {
 
     if (!data || !data.companyName || !data.industry || !data.location || !data.website) {
         return <div>No Data Found</div>;
@@ -108,9 +117,6 @@ const OrganistionsCard = ({data}) => {
         </Paper>
     )
 }
-
-
-
 
 const HistoryCard = () => {
     
@@ -186,45 +192,49 @@ const HistoryCard = () => {
     );
 };
 
+type HyperlinkProps = {
+    children: React.ReactNode;
+    href: string;
+    };
 
 
-const Hyperlink = ({children, href}) => {
+const Hyperlink = ({children, href}: HyperlinkProps) => {
     
         return(
             <a className="text-blue-500 hover:text-blue-700" href={href}>{children}</a>
         )
     }
 
-
-interface Jobs {
-
-    jobID: number;
-    organisationID: number;
-    title: string;
-    jobType: string;
-    location: string;
-    salaryRange: string;
-    shortlist: number;
-    CVsent: number;
-    interview: number;
-    offer: number;
-    rejected: number;
+type JobsCardProps = {
+    data: {
+        jobID: number;
+        organisationID: number;
+        title: string;
+        jobType: string;
+        location: string;
+        salaryRange: string;
+        shortlist: number;
+        CVsent: number;
+        interview: number;
+        offer: number;
+        rejected: number;
+    }[]
 }
 
+const JobsCard = ({data} : JobsCardProps) => {
 
-const JobsCard = ({data}) => {
-
-        return (
-            <div className="bg-white p-4 flex flex-1 flex-col min-h-[calc(100vh-400px)]">
-                <div className="flex flex-row justify-between">
-                <div className="flex flex-col gap-1 mb-2">
+        return (    
+            <Paper>
+                <div className="flex w-full flex-col p-4 justify-between">
+                <div className="flex flex-row justify-between mb-2">
+                <div className="flex flex-col gap-1">
                 <H3>Jobs</H3>
                 <Caption>{data.length} results</Caption>
                 </div>
                 <Button variant="tertiary" size="small" onClick={() => {}} >Add Job</Button>
                 </div>
                 {data.length === 0 && <EmptyState message="No jobs found." />}
-                {data.map((item: Jobs) => {
+                {data.map((item) => {
                     return(
                         <div key={item.jobID} className="flex flex-col mb-4 border-b border-slate-100 pb-4 gap-1">
                         <div className="flex flex-row justify-between">
@@ -247,12 +257,17 @@ const JobsCard = ({data}) => {
                     )
                 }
                 )}
-            </div>
+                </div>
+            </Paper>
         )
     }
 
+    type KPIProps = {
+        children: React.ReactNode;
+        title: string;
+        };
 
-    const KPI = ({children, title='title'}) => {
+    const KPI = ({children, title='title'}: KPIProps) => {
 
         return(
             <div className="flex flex-col items-center justify-center w-full h-12 bg-slate-100">
@@ -262,58 +277,178 @@ const JobsCard = ({data}) => {
         )
     }
 
-    interface Location {
-        locationID: number;
-        officeType: string;
-        address: string;
-        city: string;
-        state: string;
-        country: string;
-        postalCode: string;
+    type Location = {
+        data: {
+            locationID: number;
+            organisationID: number;
+            officeType: string;
+            address: string;
+            city: string;
+            country: string;
+            postalCode: string;
+        }[];
     }
-
-    const LocationCard = ({data}) => {
-
+    
+    const LocationCard = ({ data }: Location) => {
+        const [isModalOpen, setIsModalOpen] = useState(false);
+    
         return (
             <Paper>
                 <div className="flex flex-1 flex-col gap-4 justify-between items-center p-4 min-w-[300px]">
                     <div className="flex flex-row justify-between items-center w-full">
-                    <div className="flex flex-col gap-1">
-                    <H4>Locations</H4>
-                    <Caption>{data.length} results</Caption>
-                    </div>
-                    <Button variant="tertiary" size="small" onClick={() => {}} >Add Location</Button>
+                        <div className="flex flex-col gap-1">
+                            <H4>Locations</H4>
+                            <Caption>{data.length} results</Caption>
+                        </div>
+                        <Button variant="tertiary" size="small" onClick={() => setIsModalOpen(true)}>Add Location</Button>
                     </div>
                     <ul className="flex flex-col w-full">
                         {data.length === 0 && <EmptyState message="No locations found." />}
-                        {data.map((item: Location) => (
+                        {data.map((item) => (
                             <li key={item.locationID}>
-                            <H4>{item.officeType}</H4> 
+                                <H6>{item.officeType}</H6>
                                 <P2>{item.address}</P2>
                                 <div className="flex flex-row gap-2">
-                                <P2>{item.city}, {item.country}</P2>
+                                    <P2>{item.city}, {item.country}</P2>
                                 </div>
                                 <P2>{item.postalCode}</P2>
                             </li>
                         ))}
                     </ul>
+                    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                        <LocationForm setIsModalOpen={setIsModalOpen} />
+                    </Modal>
                 </div>
             </Paper>
         )
     }
+    
+    const LocationForm = ({ setIsModalOpen }: { setIsModalOpen: (isOpen: boolean) => void }) => {
+        const [formData, setFormData] = useState({
+            officeType: '',
+            address: '',
+            city: '',
+            country: '',
+            postalCode: '',
+        });
+    
+        const [formSubmitted, setFormSubmitted] = useState(false);
+        const [error] = useState('');
+    
+        const { organisationID } = useParams();
+    
+        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.target;
+            setFormData(prevState => ({ ...prevState, [name]: value }));
+        };
+    
+        const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            setFormSubmitted(true);
+    
+            if (formData.officeType && formData.address && formData.city && formData.country && formData.postalCode) {
+                fetch('http://localhost:3001/locations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        officeType: formData.officeType,
+                        address: formData.address,
+                        city: formData.city,
+                        country: formData.country,
+                        postalCode: formData.postalCode,
+                        organisationID: organisationID,
+                    }),
+                })
+                .then((response) => {
+                    response.json();
+                    setIsModalOpen(false);
+                })
+                .catch((error) => {
+                    console.error("Error adding location: ", error);
+                });
+            } 
+        };
+    
+        return (
+            <div className="flex flex-col gap-4 min-w-[400px] max-w-[500px]">
+                <H4>Add a new location</H4>
+                <div className="flex flex-col gap-2">
+                    <Input
+                        label="Office Type"
+                        type="text"
+                        errorMessage={formSubmitted && !formData.officeType ? 'Please fill in field' : undefined}
+                        placeholder="Office Type"
+                        onChange={handleInputChange}
+                        value={formData.officeType}
+                        name="officeType"
+                    />
+                    <Input
+                        label="Address"
+                        type="text"
+                        errorMessage={formSubmitted && !formData.address ? 'Please fill in field' : undefined}
+                        placeholder="Address"
+                        onChange={handleInputChange}
+                        value={formData.address}
+                        name="address"
+                    />
+                    <Input
+                        label="City"
+                        type="text"
+                        errorMessage={formSubmitted && !formData.city ? 'Please fill in field' : undefined}
+                        placeholder="City"
+                        onChange={handleInputChange}
+                        value={formData.city}
+                        name="city"
+                    />
+                    <Input
+                        label="Country"
+                        type="text"
+                        errorMessage={formSubmitted && !formData.country ? 'Please fill in field' : undefined}
+                        placeholder="Country"
+                        onChange={handleInputChange}
+                        value={formData.country}
+                        name="country"
+                    />
+                    <Input
+                        label="Postal Code"
+                        type="text"
+                        errorMessage={formSubmitted && !formData.postalCode ? 'Please fill in field' : undefined}
+                        placeholder="Postal Code"
+                        onChange={handleInputChange}
+                        value={formData.postalCode}
+                        name="postalCode"
+                    />
+                </div>
+                {error && <p className="text-red-500">{error}</p>}
+                <button className="bg-slate-800 hover:bg-slate-900 text-white rounded-md py-2" onClick={handleSubmit}>Submit</button>
+
+            </div>
+        );
+    }
+    
+    interface Note {
+        text: string;
+        organisationID: string;
+        created_at: string;
+        id: string;  // Assuming each note also has an 'id' based on your delete func    
+
+    }
 
     const Notes = () => {
 
-        const [notes, setNotes] = useState([]);
+        const [notes, setNotes] = useState<Note[]>([]);
         const [inputValue, setInputValue] = useState('');
         const [isModalOpen, setIsModalOpen] = useState(false); 
         const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-        const [deleteIndex, setDeleteIndex] = useState(null);
+        const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+
 
         const { organisationID } = useParams();
 
       
-        const handleInputChange = (e) => {
+        const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
           setInputValue(e.target.value);
         };
 
@@ -338,14 +473,20 @@ const JobsCard = ({data}) => {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    setNotes([...notes, data]);
-                    setInputValue('');
-                    setIsModalOpen(false);
-                });
+            // Update the state with the new client
+            setNotes(prevNotes => [...prevNotes, data]);
+            setInputValue('');
+            setIsModalOpen(false);
+                }
+                )
+                .catch((error) => {
+                    console.error("Error adding note: ", error);
+                }
+                );
             }
         };
              
-        const handleDeleteTask = (index) => {
+        const handleDeleteTask = (index: number) => {
             setDeleteIndex(index);
             setDeleteModalOpen(true);
         };
@@ -376,11 +517,12 @@ const JobsCard = ({data}) => {
             }
         };       
         
-        const formatDate = (dateString) => {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formatDate = (dateString: string): string => {
+            const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString(undefined, options);
-        }        
-      
+        };
+        
+        
         return (
             <Paper>
                     <div className="flex flex-row justify-between items-center p-4">
@@ -440,17 +582,21 @@ const JobsCard = ({data}) => {
 
 
 
-interface Client {
-            clientID: number;
-            organisationID: number;
-            clientName: string;
-            contactEmail: string;
-            phoneNumber: string;
-            industryCategory: string;
-            location: string;
-        }
+  type Client = {
+    data : {
+        clientID: number;
+        organisationID: number;
+        clientName: string;
+        contactEmail: string;
+        phoneNumber: string;
+        industryCategory: string;
+        location: string;
+    }[]
+}
+    
+    const ClientContacts = ({data} : Client) => {
 
-    const ClientContacts = ({data}) => {
+        const [isModalOpen, setIsModalOpen] = useState(false);
 
         return (
             <Paper>
@@ -459,15 +605,14 @@ interface Client {
                     <H4>Client Contacts</H4>
                     <Caption>{data.length} results</Caption>
                 </div>
-                    <Button variant="tertiary" size="small" onClick={() => {}} >Add Contact</Button>
+                    <Button variant="tertiary" size="small" onClick={() => setIsModalOpen(true)}>Add Client</Button>
                 </div>
-                <ul className="flex flex-col gap-8 p-4">
+                <ul className="flex flex-row flex-wrap gap-8 p-4">
                     {data.length === 0 && <EmptyState message="No clients found." />}
-                    {data.map((item: Client) => (
-                        <li key={item.clientID} className="flex flex-col">
-                           <H4>{item.clientName}</H4> 
+                    {data.map((item) => (
+                        <li key={item.clientID} className="flex min-w-[200px] flex-col gap-1">
+                           <H6>{item.clientName}</H6> 
                             <P2>{item.contactEmail}</P2>
-
                             <div className="flex flex-row gap-2">
                             <P2>{item.phoneNumber}</P2>
                             </div>
@@ -475,11 +620,125 @@ interface Client {
                         </li>
                     ))}
                 </ul>
-                
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                    <ClientForm setIsModalOpen={setIsModalOpen} />
+                </Modal>          
             </Paper>
         )
 
     }
+
+
+    const ClientForm = ({ setIsModalOpen }: { setIsModalOpen: (isOpen: boolean) => void }) => {
+
+        const [formData, setFormData] = useState({
+            clientName: '',
+            contactEmail: '',
+            phoneNumber: '',
+            industryCategory: '',
+            location: '',
+        });
+    
+        const [formSubmitted, setFormSubmitted] = useState(false);
+        const [error, setError] = useState('');
+    
+        const { organisationID } = useParams();
+    
+        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.target;
+            setFormData(prevState => ({ ...prevState, [name]: value }));
+        };
+    
+        const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            setFormSubmitted(true);
+    
+            if (formData.clientName && formData.contactEmail && formData.phoneNumber && formData.industryCategory && formData.location) {
+    
+                fetch('http://localhost:3001/clients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        clientName: formData.clientName,
+                        contactEmail: formData.contactEmail,
+                        phoneNumber: formData.phoneNumber,
+                        industryCategory: formData.industryCategory,
+                        location: formData.location,
+                        organisationID: organisationID,
+                    }),
+                })
+                .then((response) => {
+                    response.json();
+                    setIsModalOpen(false);
+                })
+                .catch((error) => {
+                    console.error("Error adding client: ", error);
+                });
+    
+            } else {
+                setError('Please fill in all fields');
+            }
+        };
+               
+
+
+            return (
+            <div className="flex flex-col gap-4 min-w-[400px] max-w-[500px]">
+                <H4>Add a new client</H4>
+                <div className="flex flex-col gap-2">
+                <Input
+                label="Client Name"
+                type="text"
+                errorMessage={formSubmitted && !formData.clientName ? 'Please fill in field' : undefined}
+                placeholder="Joe Bloggs"
+                onChange={handleInputChange}
+                value={formData.clientName}
+                name="clientName"
+                />
+                <Input
+                label="Contact Email"
+                type="email"
+                errorMessage={formSubmitted && !formData.contactEmail ? 'Please fill in field' : undefined}
+                placeholder="email@email.co.uk"
+                onChange={handleInputChange}
+                value={formData.contactEmail}
+                name="contactEmail"
+                />
+                <Input
+                label="Phone Number"
+                type="tel"
+                errorMessage={formSubmitted && !formData.phoneNumber ? 'Please fill in field' : undefined}
+                placeholder="Phone Number"
+                onChange={handleInputChange}
+                value={formData.phoneNumber}
+                name="phoneNumber"
+                />
+                <Input
+                label="Industry Category"
+                type="text"
+                errorMessage={formSubmitted && !formData.industryCategory ? 'Please fill in field' : undefined}
+                placeholder="Industry Category"
+                onChange={handleInputChange}
+                value={formData.industryCategory}
+                name="industryCategory"
+                />
+                <Input
+                label="Location"
+                type="text"
+                errorMessage={formSubmitted && !formData.location ? 'Please fill in field' : undefined}
+                placeholder="Location"
+                onChange={handleInputChange}
+                value={formData.location}
+                name="location"
+                />
+                </div>
+                {error && <p className="text-red-500">{error}</p>}
+                <button className="bg-slate-800 hover:bg-slate-900 text-white rounded-md py-2" onClick={handleSubmit}>Submit</button>
+            </div>
+            );
+        };
 
     interface EmptyStateProps {
         message: string;
@@ -492,7 +751,3 @@ interface Client {
           </div>
         );
       };
-
-
-
-

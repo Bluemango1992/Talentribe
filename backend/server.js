@@ -19,6 +19,21 @@ app.get('/clients', async (req, res) => {
     }
 });
 
+app.post('/clients', async (req, res) => {
+    try {
+        const { clientName, contactEmail, phoneNumber, industryCategory, location, organisationID } = req.body;
+        const [result] = await pool.query(
+            "INSERT INTO clients (clientName, contactEmail, phoneNumber, industryCategory, location, organisationID) VALUES (?, ?, ?, ?, ?, ?)",
+            [clientName, contactEmail, phoneNumber, industryCategory, location, organisationID]
+        );
+        res.status(201).json({ message: 'Client added successfully!', clientID: result.insertId });
+    } catch (error) {
+        console.error("Error adding client: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 app.get('/jobs', async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM jobs");
@@ -86,6 +101,23 @@ app.get('/locations', async (req, res) => {
         res.json(results);
     } catch (error) {
         console.error('Error fetching locations:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/locations', async (req, res) => {
+ 
+    try {
+        const { officeType, address, city, country, postalCode, organisationID } = req.body;
+
+        const [result] = await pool.query(
+            'INSERT INTO locations (officeType, address, city, country, postalCode, organisationID) VALUES (?, ?, ?, ?, ?, ?)',
+            [officeType, address, city, country, postalCode, organisationID]
+        );
+
+        res.status(201).json({ message: 'Location added successfully!', locationID: result.insertId });
+    } catch (error) {
+        console.error('Error adding location:', error);
         res.status(500).send('Internal Server Error');
     }
 });

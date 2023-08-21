@@ -5,7 +5,11 @@ SHOW DATABASES;
 SHOW TABLES;
 
 --@block
-SELECT * FROM notes;
+SELECT * FROM clients;
+
+--@block
+DELETE FROM clients 
+WHERE clientID BETWEEN 19 AND 25;
 
 --@block
 USE talentribe;

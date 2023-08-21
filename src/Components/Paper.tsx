@@ -4,7 +4,7 @@ interface PaperProps {
  
 const Paper = ({ children }: PaperProps) => {
     return (
-      <div className='bg-white rounded-sm border border-gray-200'>
+      <div className='bg-white rounded-sm border gap-2 border-gray-200'>
         {children}
       </div>
     )

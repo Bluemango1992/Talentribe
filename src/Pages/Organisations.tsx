@@ -1,4 +1,4 @@
-import { Dropdown, Table, Input, Button, SelectField } from '../Components';
+import { Table, Input, Button, SelectField } from '../Components';
 import { Layout } from '../Pages';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,7 @@ interface Organisations {
 const Organisations = () => {
 
   const [organisationData, setOrganisationData] = useState<Organisations[]>([]);
+  
   const navigate = useNavigate();
 
   const [companyFilter, setCompanyFilter] = useState<string | null>(null);
@@ -115,7 +116,6 @@ const Model = ({isOpen, onClose, children }: any) => {
       <button className="ml-2" onClick={onClose}>
           <FaWindowClose size={24} />
         </button>
-        {/* Modal Content */}
         <div>
           {children}
         </div>
