@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Layout } from ".";
-import { Paper } from '../Components';
-import { Caption, H1, H3, P2 } from "../Typography";
+import { Layout, Template } from ".";
+import { Paper, ListItem, HeaderCard } from "../Components";
 
 const ClientsProfile = () => {
     const [clientData, setJobData] = useState<any | null>(null);
@@ -43,7 +42,7 @@ const ClientsProfile = () => {
                 <>
                     {clientData ? (
                         <>
-                            <ClientCard data={clientData} organisationData={organisationData} />
+                            <Template top={ <ClientCard data={clientData} organisationData={organisationData} /> } leftheading="Career History" middleheading="hello" rightheading="Notes" />
                         </>
                     ) : (
                         <p>No data found</p>
@@ -63,54 +62,26 @@ type ClientCardProps = {
         clientName: string;
         contactEmail: string;
         phoneNumber: string;
-        organisationID: number;
-        companyName: string;
-        industryCategory: string;
         location: string;
+        organisationID: number;
     };
     organisationData: {
-        organisationID: number;
         companyName: string;
         industry: string;
-        location: string;
-        lastClientContact: string;
     } | null;
-};
+}
 
 const ClientCard = ({ data, organisationData }: ClientCardProps) => {
     return (
         <Paper>
-            <div className="flex justify-between items-center mb-4 p-4">
-                <div>
-                    <H1>{data.clientName}</H1>
-                    <Caption>{data.contactEmail}</Caption>
-                </div>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <H3>Organisation</H3>
-                    <P2>{organisationData?.companyName}</P2>
-                </div>
-                <div>
-                    <Caption>Organisation ID: {organisationData?.organisationID}</Caption>
-                </div>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <H3>Location</H3>
-                    <P2>{data.location}</P2>
-                </div>
-                <div>
-                    <Caption>Industry: {organisationData?.industry}</Caption>
-                </div>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <H3>Contact</H3>
-                    <P2>{data.phoneNumber}</P2>
-                </div>
-                <div>
-                    <Caption>Last contact: {organisationData?.lastClientContact}</Caption>
+            <div className="flex flex-col flex-1 gap-1">
+                <HeaderCard heading={data.clientName} subHeading={data.contactEmail} headingSize={false} />
+                <div className="grid grid-cols-4">
+                    <ListItem title='Contact Email'>{data.contactEmail}</ListItem>
+                    <ListItem title='Phone Number'>{data.phoneNumber}</ListItem>
+                    <ListItem title='Location'>{data.location}</ListItem>
+                    <ListItem title='Organisation'>{organisationData?.companyName}</ListItem>
+                    <ListItem title='Industry'>{organisationData?.industry}</ListItem>
                 </div>
             </div>
         </Paper>

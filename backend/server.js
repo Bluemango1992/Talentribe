@@ -104,6 +104,20 @@ app.get('/users', async (req, res) => {
     }
 });
 
+app.post('/users', async (req, res) => {
+    try {
+        const { firstName, lastName, email, password } = req.body;
+        const [result] = await pool.query(
+            "INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)",
+            [firstName, lastName, email, password]
+        );
+        res.status(201).json({ message: 'User added successfully!', userID: result.insertId });
+    } catch (error) {
+        console.error("Error adding user: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 app.get('/activities', async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM activities");

@@ -25,14 +25,13 @@ const SelectField = ({ placeholder, options, label, onSelect, errorMessage }: an
 
     const handleSelect = (option: string) => {
       setSelectedOption(option);
-      onSelect({ target: { name: name, value: option }}); // Adjust this line
+      onSelect(option);
       setIsOpen(false);
     };
-    
   
     return (
-      <div className="relative w-full font-maven-pro" ref={wrapperRef}>
-        <label className="text-sm font-bold text-gray-500">{label}</label>
+      <div className="relative w-full font-maven-pro max-w-[320px]" ref={wrapperRef}>
+        <label className="text-sm text-gray-500">{label}</label>
         {errorMessage && <span className={`flex gap-2 items-center text-sm text-red-500`}><FaFlag />{errorMessage}</span>}
         <button
           className="w-full bg-white border border-gray-500 rounded-md px-4 py-2 text-sm font-medium flex justify-between items-center mb-1"

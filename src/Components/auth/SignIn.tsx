@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button , Input } from '../';
-import { H2 } from '../../Typography';
+import { Button , Input } from '../../Components';
+import { H2, P } from '../../Typography';
 import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
@@ -32,14 +32,15 @@ const SignIn = () => {
     }
 
     return (
-        <div className='flex items-center justify-center h-screen'>
-            <div className='flex flex-col items-center justify-center gap-5 border border-gray-300 rounded-md h-1/2 w-1/3 shadow-lg'>
+        <div className='flex items-center justify-center h-screen bg-gradient-to-r from-cyan-100 to-blue-200'>
+            <div className='flex flex-col items-center justify-center gap-5 border border-gray-300 rounded-md h-1/2 w-1/3 shadow-lg bg-white'>
+                <img src="src/assets/Talentribe.png" alt="logo" className="w-12" />
             <H2>Sign In</H2>
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>} {/* Display the error message */}
                 <Input label='Email' type="text" placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
                 <Input label='Password' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} />
-                <Button onClick={handleSignIn} theme='dark'>Sign In</Button>
-                <p className="mt-4">Don't have an account? <Link to="/signup">Sign Up</Link></p> 
+                <Button onClick={handleSignIn} >Sign In</Button>
+                <P className="mt-4">Don't have an account? <Link to="/signup">Sign Up</Link></P> 
             </div>
         </div>
     )

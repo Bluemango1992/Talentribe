@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Layout } from ".";
-import { H2, P2 } from "../Typography";
-import { Paper, ListItem } from '../Components';
+import { Layout, Template } from ".";
+import { H4 } from "../Typography";
+import { Paper, ListItem, Notes, HeaderCard, ActivityCard } from "../Components";
+import { FaPaperPlane } from "react-icons/fa";
+
+
 
 const CandidateProfile = () => {
 
@@ -11,6 +14,7 @@ const CandidateProfile = () => {
   const [loading, setLoading] = useState(true);
 
   const { candidateID } = useParams<{ candidateID: string }>();
+
 
   useEffect(() => {
       const fetchData = async () => {
@@ -42,7 +46,7 @@ const CandidateProfile = () => {
               <>
                   {candidateData ? (
                       <>
-                          <CandidateCard data={candidateData} userData={userData} />
+                        <Template top={ <CandidateCard data={candidateData} userData={userData} /> } left={<ActivityCard />} middle={<CareerHistory />} right={ <><Notes /> <SkillsCard /></> } leftheading="Career History" middleheading="hello" rightheading="Notes" />
                       </>
                   ) : (
                       <p>No data found</p>
@@ -54,6 +58,9 @@ const CandidateProfile = () => {
 }
 
 export default CandidateProfile;
+
+
+
 
 type CandidateCardProps = {
   data: {
@@ -77,29 +84,115 @@ type CandidateCardProps = {
 }
 
 const CandidateCard = ({ data, userData }: CandidateCardProps) => {
-  // Finding the user names for responsibleAgent and addedBy
+
   const responsibleAgentName = userData.find(user => user.userID === data.responsibleAgent)?.userName || data.responsibleAgent;
   const addedByName = userData.find(user => user.userID === data.addedBy)?.userName || data.addedBy;
 
   return (
     <Paper>
-      <div className="flex flex-col gap-4 p-8">
-          <H2>{data.name}</H2>
+      <div className="flex flex-col flex-1 gap-1">
+        <HeaderCard heading={data.name} subHeading={data.currentJob} headingSize={false} />
+        <div className="grid grid-cols-4">
+          <ListItem title='Location'>{data.location}</ListItem>
+          <ListItem title='Current Job'>{data.currentJob}</ListItem>
           <ListItem title='Review Date'>{new Date(data.reviewDate).toLocaleDateString()}</ListItem>
           <ListItem title='Review Status'>{data.reviewStatus}</ListItem>
-          <ListItem title='Location'>{data.location}</ListItem>
-          
           <ListItem title='Current Company'>{data.currentCompany}</ListItem>
-          <ListItem title='Current Job'>{data.currentJob}</ListItem>
           <ListItem title='Job Type'>{data.jobType}</ListItem>
           <ListItem title='Salary Range'>{data.salaryRange}</ListItem>
-          
           <ListItem title='Objective'>{data.objective}</ListItem>
-          
           <ListItem title='Responsible Agent'>{responsibleAgentName}</ListItem>
           <ListItem title='Added By'>{addedByName}</ListItem>
+          </div>
       </div>
     </Paper>
+  );
+}
+
+
+const SkillsCard = () => {
+
+const  data = [  
+    {
+      language: ['English ', 'French ', 'Spanish '],
+      industry: ['Banking ', 'Finance ', 'Accounting '],
+      skills: ['Excel ', 'Powerpoint ', 'Word ']
+    },
+  ]
+
+  return (
+    <Paper>
+    <div className="flex flex-col gap-4">
+      <HeaderCard heading='Skills' />
+      <div className="flex flex-col gap-4">
+        {data.map((skill, index) =>
+          <div key={index} className="flex flex-col gap-2">
+            <ListItem title='Language'>{skill.language}</ListItem>
+            <ListItem title='Industry'>{skill.industry}</ListItem>
+            <ListItem title='Skills'>{skill.skills}</ListItem>
+          </div>
+        )}
+      </div>
+    </div>
+  </Paper>
+  );
+}
+
+
+
+const CareerHistory = () => {
+
+  const data = [
+    {
+      companyName: 'HSBC',
+      jobTitle: 'Accountant',
+      startDate: '20-10-2020',
+      endDate: '20-10-2020',
+      totalPackage: '£50,000',
+      packageBreakdown: '£40,000 basic, £10,000 bonus',
+      currency: 'GBP',
+      salaryPeriod: 'annum',
+      noticePeriod: '1 month',
+      location: 'London',
+      reasonForLeaving: 'lack of progression'
+    },
+    {
+      companyName: 'HSBC',
+      jobTitle: 'Accountant',
+      startDate: '20-10-2020',
+      endDate: '20-10-2020',
+      totalPackage: '£50,000',
+      packageBreakdown: '£40,000 basic, £10,000 bonus',
+      currency: 'GBP',
+      salaryPeriod: 'annum',
+      noticePeriod: '1 month',
+      location: 'London',
+      reasonForLeaving: 'lack of progression'
+    },
+  ]
+
+  return (
+          <Paper>
+            <HeaderCard heading='Career History' />
+            {data.map((career, index) => <CareerCard key={index} data={career} />)}
+          </Paper>
+  );
+}
+
+
+const CareerCard = ({ data }: any) => {
+  return (
+        <div className="grid grid-cols-2 bg-white p-2">
+          <ListItem title='Company Name'>{data.companyName}</ListItem>
+          <ListItem title='Job Title'>{data.jobTitle}</ListItem>    
+          <ListItem title='Start Date'>{data.startDate}</ListItem>
+          <ListItem title='End Date'>{data.endDate}</ListItem>
+          <ListItem title='Reason for Leaving'>{data.reasonForLeaving}</ListItem>
+          <ListItem title='Notice Period'>{data.noticePeriod}</ListItem>
+          <ListItem title='Location'>{data.location}</ListItem>
+          <ListItem title='Package Breakdown'>{data.packageBreakdown}</ListItem>
+          <ListItem title='Total Package'>{data.totalPackage}</ListItem>
+          </div>
   );
 }
 

@@ -10,21 +10,36 @@ const SideBar = () => {
     };
   
     return (
-      <div className='bg-slate-300 w-12 fixed mt-10 h-full flex flex-col items-center py-5 gap-5'>
+      <div className='bg-cyan-900 fixed top-0 left-0 h-screen m-0 flex shadow-lg flex-col items-center justify-start mt-12 pt-6'>
           <Link to="/jobs" className="my-2" onClick={() => handleLinkClick('jobs')}>
-            <FaBriefcase size={24} color={selected === 'jobs' ? '#788475' : '#5e5d5c'} />
+            <SideBarIcon icon={<FaBriefcase size={24} />} selected={selected === 'jobs'} onClick={() => handleLinkClick('jobs')} text='Jobs' />
           </Link>
           <Link to="/candidates" className="my-2" onClick={() => handleLinkClick('candidates')}>
-            <FaUser size={24} color={selected === 'candidates' ? '#788475' : '#5e5d5c'} />
+            <SideBarIcon icon={<FaUser size={24} />} selected={selected === 'candidates'} onClick={() => handleLinkClick('candidates')} text='Candidates' />
           </Link>
           <Link to="/clients" className="my-2" onClick={() => handleLinkClick('clients')}>
-            <FaBuilding size={24} color={selected === 'clients' ? '#788475' : '#5e5d5c'} />
+            <SideBarIcon icon={<FaBuilding size={24} />} selected={selected === 'clients'} onClick={() => handleLinkClick('clients')} text='Clients' />
           </Link>
           <Link to="/organisations" className="my-2" onClick={() => handleLinkClick('organisations')}>
-            <FaIndustry size={24} color={selected === 'organisations' ? '#788475' : '#5e5d5c'} />
+            <SideBarIcon icon={<FaIndustry size={24} />} selected={selected === 'organisations'} onClick={() => handleLinkClick('organisations')} text='Organisations' />
           </Link>
       </div>
     )
   }
+
+  const SideBarIcon = ({ icon, selected, onClick }: any) => {
+    return (
+      <div
+        className={`flex text-white items-center justify-center h-12 w-12 cursor-pointer hover:bg-cyan-700 transition-all duration-200 ${
+          selected && 'bg-cyan-700 text-cyan-300'
+        }`}
+        onClick={onClick}
+      >
+        {icon}
+
+      </div>
+    );
+  }
+
 
 export default SideBar;

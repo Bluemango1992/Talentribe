@@ -8,7 +8,7 @@ type ListItemProps = {
 
 const ListItem = ({ title, children }: ListItemProps) => {
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 py-2 px-3 min-w-[200px]">
             <Caption>{title}</Caption>
             <P2>{children}</P2>
         </div>

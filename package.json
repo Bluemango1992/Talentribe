@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^4.23.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.5",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/leaflet": "^1.9.3",
     "@types/react-leaflet": "^3.0.0",

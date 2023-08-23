@@ -12,4 +12,9 @@ export { default as Dropdown } from './Dropdown';
 export { default as SelectField } from './SelectField';
 export { default as Modal } from './Modal';
 export { default as ListItem } from './ListItem';
-
+export { default as Notes } from './Notes';
+export { default as EmptyState } from './EmptyState';
+export { default as HeaderCard } from './HeaderCard';
+export { default as ActivityCard } from './ActivityCard';
+export { default as KPI } from './KPI';
+export { default as ClientContacts } from './ClientContacts';

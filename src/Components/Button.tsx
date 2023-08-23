@@ -1,7 +1,7 @@
 
 interface ButtonProps {
     children?: React.ReactNode;
-    onClick: () => void;
+    onClick?: () => void;
     size?: 'small' | 'medium' | 'large';
     disabled?: boolean;
     variant?: 'primary' | 'secondary' | 'tertiary';
