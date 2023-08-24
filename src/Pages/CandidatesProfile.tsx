@@ -196,3 +196,11 @@ const CareerCard = ({ data }: any) => {
   );
 }
 
+const ProfileCard = () => {
+  return (
+    <>
+    hello
+    </>
+  );
+}
+

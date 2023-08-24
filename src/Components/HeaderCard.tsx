@@ -10,7 +10,7 @@ type HeaderCardProps = {
     headingSize?: boolean;
 }
 
-const HeaderCard = ({ heading='Title', subHeading='', icon=<FaPlus />, onClick=(() => {}), showIcon=true, headingSize=true }: HeaderCardProps) => {
+const HeaderCard = ({ heading='Title', subHeading='', icon=<FaPlus />, showIcon=true, headingSize=true }: HeaderCardProps) => {
 
     return (
         <div className="flex p-4 bg-slate-100">

@@ -9,6 +9,45 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
+app.get('/search', async (req, res) => {
+    const query = req.query.q;
+    const results = [];
+
+    try {
+        // Searching in candidates table
+        let [rows] = await pool.query("SELECT candidateID, name FROM candidates WHERE name LIKE ?", [`%${query}%`]);
+        for (const row of rows) {
+            results.push({ type: 'candidate', id: row.candidateID, name: row.name });
+        }
+
+        // Searching in clients table
+        [rows] = await pool.query("SELECT clientID, clientName FROM clients WHERE clientName LIKE ?", [`%${query}%`]);
+        for (const row of rows) {
+            results.push({ type: 'client', id: row.clientID, name: row.clientName });
+        }
+
+        // Searching in jobs table
+        [rows] = await pool.query("SELECT jobID, title FROM jobs WHERE title LIKE ?", [`%${query}%`]);
+        for (const row of rows) {
+            results.push({ type: 'job', id: row.jobID, name: row.title });
+        }
+
+        // Searching in organisations table
+        [rows] = await pool.query("SELECT organisationID, companyName FROM organisations WHERE companyName LIKE ?", [`%${query}%`]);
+        for (const row of rows) {
+            results.push({ type: 'organisation', id: row.organisationID, name: row.companyName });
+        }
+
+        res.json(results);
+
+    } catch (error) {
+        console.error("Error during search: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
+
 app.get('/clients', async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM clients");

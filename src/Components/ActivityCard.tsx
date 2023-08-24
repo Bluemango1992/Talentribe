@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaArrowAltCircleDown, FaArrowAltCircleUp } from 'react-icons/fa';
 import { Button, HeaderCard, Paper } from '../Components';
-import { Caption, H6, P2, H4 } from '../Typography';
+import { Caption, H6, P2 } from '../Typography';
 
 
 const ActivityCard = () => {
@@ -73,10 +73,13 @@ const ActivityCard = () => {
         <Paper>
             <div className="flex flex-col h-full min-w-[400px]">
             <HeaderCard heading='Activity' showIcon={false} />
-                <div className="flex flex-col items-center justify-between w-full p-4">
+                <div className="flex flex-col h-full items-center justify-between w-full p-6">
                 {data.slice(currentIndex, currentIndex + ITEMS_PER_SECTION).map((activity, index) => (
-                    <div key={activity.activityID} className="flex items-start gap-4 rounded-full w-full mb-4">
-                        <div className="w-8 h-8 flex justify-center items-center rounded-md bg-slate-100">{currentIndex + index + 1}</div>
+                    <div key={activity.activityID} className="flex h-full items-start gap-4 rounded-full w-full">
+                        <div className='flex flex-col justify-between items-center gap-4 min-w-max'>
+                        <div className="w-8 h-8 flex justify-center items-center rounded-md bg-slate-100"><H6>{currentIndex + index + 1}</H6></div>
+                        <div className="w-[2px] h-8 bg-slate-200"></div>
+                        </div>
                         <div className="flex flex-col min-w-max">
                             <H6>{activity.userID}</H6>
                             <P2>{activity.action}</P2>
@@ -85,7 +88,7 @@ const ActivityCard = () => {
                     </div>
                 ))}
                 </div>
-                <div className="flex justify-center items-center gap-4">
+                <div className="flex justify-center items-center gap-4 p-4">
                 <Button variant="tertiary" size="small" onClick={handlePrevious} disabled={currentIndex === 0}><FaArrowAltCircleUp color={currentIndex === 0 ? 'grey' : '#008b8b'} size={24} /></Button>
                 <Button variant="tertiary" size="small" onClick={handleNext} disabled={currentIndex + ITEMS_PER_SECTION >= data.length}><FaArrowAltCircleDown color={currentIndex + ITEMS_PER_SECTION >= data.length ? 'grey' : '#008b8b'} size={24} /></Button>
                 </div>

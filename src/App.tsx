@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
 import { H1, P2 } from './Typography';
 import { Candidates , CandidatesProfile , Clients, Jobs, Organisations, OrganisationsProfile, JobsProfile, ClientsProfile } from './Pages';
 import { SignIn , SignUp } from './Components/auth';
-
-
+import { SearchBar } from './Components';
 
 const App = () => {
   return (
       <Router>
+        <SearchBar />
           <Routes>
             <Route path='/' element={<SignIn />} />
             <Route path='/signup' element={<SignUp />} />

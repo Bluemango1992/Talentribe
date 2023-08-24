@@ -11,7 +11,7 @@ interface TabBarProps {
     const textColor = theme === "dark" ? 'text-white' : 'text-black';
 
     return (
-      <div className={`flex gap-8 mx-8 ${textColor}`}>
+      <div className={`flex gap-8 mx-8 p-2 ${textColor}`}>
           {tabs.map((tab, index) => (
               <TabItem 
                   key={index} 

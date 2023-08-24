@@ -40,7 +40,7 @@ const SignIn = () => {
                 <Input label='Email' type="text" placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
                 <Input label='Password' type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} />
                 <Button onClick={handleSignIn} >Sign In</Button>
-                <P className="mt-4">Don't have an account? <Link to="/signup">Sign Up</Link></P> 
+                <P>Don't have an account? <Link to="/signup">Sign Up</Link></P> 
             </div>
         </div>
     )

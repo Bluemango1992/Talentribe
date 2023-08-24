@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Layout, Template } from ".";
-import { Paper, ListItem, HeaderCard } from "../Components";
+import { Paper, ListItem, HeaderCard, ActivityCard } from "../Components";
 
 const ClientsProfile = () => {
     const [clientData, setJobData] = useState<any | null>(null);
@@ -42,7 +42,7 @@ const ClientsProfile = () => {
                 <>
                     {clientData ? (
                         <>
-                            <Template top={ <ClientCard data={clientData} organisationData={organisationData} /> } leftheading="Career History" middleheading="hello" rightheading="Notes" />
+                            <Template top={ <ClientCard data={clientData} organisationData={organisationData} /> } left={<ActivityCard />} middle={<></>} right={<></>} />
                         </>
                     ) : (
                         <p>No data found</p>

@@ -18,3 +18,4 @@ export { default as HeaderCard } from './HeaderCard';
 export { default as ActivityCard } from './ActivityCard';
 export { default as KPI } from './KPI';
 export { default as ClientContacts } from './ClientContacts';
+export { default as SearchBar } from './SearchBar';

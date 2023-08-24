@@ -153,7 +153,6 @@ const JobSpec = ({ data }) => {
 }
 
 
-
 const DetailCard = ({data}) => {
     return (
         <Paper>

@@ -9,11 +9,11 @@ type TemplateProps = {
 
 const Template = ({ top = <Top />, left = <Left />, middle = <Middle />, right = <Right /> }: TemplateProps) => {
     return (
-        <div className='flex flex-col gap-3'>
+        <div className='flex h-full flex-col gap-3'>
             <div className='flex w-full'>
                 {top}
             </div>
-            <div className='flex gap-4'>
+            <div className='flex h-full gap-4'>
                 <div className='flex flex-col gap-3'>
                     {left}
                 </div>
